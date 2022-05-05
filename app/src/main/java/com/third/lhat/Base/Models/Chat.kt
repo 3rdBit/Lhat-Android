@@ -6,7 +6,7 @@ import com.ktHat.Messages.Message
 import com.third.lhat.ViewModel
 
 data class Chat private constructor(val message: Message) {
-    val messageList = mutableStateListOf<Message>()
+    val messageList = mutableStateListOf(message)
     val lastMessage: Message
         get() = messageList.last()
 

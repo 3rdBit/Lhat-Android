@@ -11,7 +11,6 @@ data class Chat private constructor(val message: Message) {
         get() = messageList.last()
 
     companion object {
-        val chatList = mutableStateListOf<Chat>()
         val chatMap = mutableStateMapOf<String, Chat>()
         fun addMessage(message: Message) {
             val viewModel = ViewModel()
@@ -24,11 +23,9 @@ data class Chat private constructor(val message: Message) {
             if (to in chatMap.keys) {
                 chatMap[to]?.run{
                     messageList.add(message)
-                    chatList[0] = chatList[0].copy()
                 }
             } else {
                 val chat = Chat(message)
-                chatList.add(chat)
                 chatMap[to] = chat
             }
         }

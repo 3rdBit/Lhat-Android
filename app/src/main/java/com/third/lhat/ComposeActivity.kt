@@ -34,7 +34,7 @@ import java.net.UnknownHostException
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Main(chatList: List<Chat>) {
+fun Main(chatList: Map<String, Chat>) {
     val viewModel: ViewModel = viewModel()
     AppTheme {
         val bottomBarHeight = 48.dp
@@ -177,7 +177,7 @@ class ComposeActivity : ComponentActivity() {
                     }
                     .fillMaxSize()
                 ) {
-                    Main(Chat.chatList)
+                    Main(Chat.chatMap)
                 }
             }
         }
@@ -185,12 +185,12 @@ class ComposeActivity : ComponentActivity() {
 }
 
 @Composable
-fun MessageList(modifier: Modifier = Modifier, chats: List<Chat>, padding: Dp = 0.dp) {
+fun MessageList(modifier: Modifier = Modifier, chats: Map<String, Chat>, padding: Dp = 0.dp) {
     LazyColumn(
         modifier = modifier,
     ) {
         if (chats.size != 0) {
-            items(chats) {  // 消息们
+            items(chats.values.toList()) {  // 消息们
                 MessageCard(it.lastMessage)
             }
         }

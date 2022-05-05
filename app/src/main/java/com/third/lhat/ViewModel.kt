@@ -12,4 +12,5 @@ class ViewModel: ViewModel() {
     var bottomTabVisibility by mutableStateOf(true)
     var editing by mutableStateOf(false)
     val selectedMessage = mutableStateListOf<Message>()
+    var username by mutableStateOf("")
 }

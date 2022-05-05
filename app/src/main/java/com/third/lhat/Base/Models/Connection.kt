@@ -5,7 +5,6 @@ import com.ktHat.Messages.MessageParser
 import com.ktHat.Messages.MessageType
 import com.ktHat.Messages.UserRegMessage
 import com.ktHat.Statics.Objects.listAdapter
-import com.ktHat.Utils.findAll
 import com.squareup.moshi.JsonDataException
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -17,7 +16,6 @@ import java.io.InputStreamReader
 import java.io.StringWriter
 import java.net.InetSocketAddress
 import java.net.Socket
-import java.util.regex.Pattern
 
 /**
  * 用法：
@@ -73,18 +71,18 @@ class Connection(IP: String, port: Int) {
         return GlobalScope.launch() {
             while (true) {
                 val received = connection.receive()
-                for (json in received.findAll(Pattern.compile("\\{.*?}"))) {
-                    if (json.isBlank()) {
+                for (json in "\\{.*?\\}".toRegex().findAll(received)) {
+                    if (json.value.isBlank()) {
                         continue
                     }
-                    val message = MessageParser.parse(json)
+                    val message = MessageParser.parse(json.value)
                     if (message.type == MessageType.USER_MANIFEST) {
                         listAdapter.fromJson(message.rawMessage)?.let { OnlineList.setList(it) }
                         continue
                     }
 
                     try {
-                        onMessageChanged(MessageParser.parse(json))
+                        onMessageChanged(MessageParser.parse(json.value))
                     } catch (e: JsonDataException) {
                         e.printStackTrace()
                     }

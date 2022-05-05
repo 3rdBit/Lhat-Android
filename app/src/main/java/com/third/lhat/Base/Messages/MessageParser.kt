@@ -1,5 +1,6 @@
 package com.ktHat.Messages
 
+import android.util.Log
 import com.ktHat.Models.UnknownMessage
 import com.ktHat.Statics.Objects.moshi
 import com.squareup.moshi.adapter
@@ -15,7 +16,7 @@ object MessageParser {
     @OptIn(ExperimentalStdlibApi::class)
     fun parse(json: String): Message {
         val jsonAdapter = moshi.adapter<UnknownMessage>()
-
+        Log.d("json", json)
         val obj = jsonAdapter.serializeNulls().fromJson(json)
 
         val message = when (obj?.type) {

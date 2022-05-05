@@ -1,6 +1,5 @@
 package com.third.lhat
 
-import android.system.ErrnoException
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.background
@@ -27,19 +26,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ktHat.Messages.TextMessage
 import com.ktHat.Models.Connection
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.net.ConnectException
 import java.net.URI
-import java.net.UnknownHostException
 import kotlin.coroutines.EmptyCoroutineContext
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun LoginPage() {
+fun LoginPage(
+    onLoginPressed: (server: String, port: String, username: String) -> Connection,
+    catch: (e: Exception) -> Boolean,
+    afterConnection: (connection: Connection) -> Unit
+) {
     val colorScheme = MaterialTheme.colorScheme
 
     var server by remember { mutableStateOf("") }
@@ -211,36 +211,24 @@ fun LoginPage() {
                     } else {
                         {
                             pressed = true
+                            var isError = false
                             val coroutineScope = CoroutineScope(EmptyCoroutineContext)
                             coroutineScope.launch(Dispatchers.IO) {
                                 try {
-                                    val connection = Connection(
-                                        getHost(server),
-                                        port.toInt(),
-                                        username
-                                    )
-                                    connection.send(TextMessage("1", "2", "hello"))
-                                } catch (e: Exception) {
-                                    when (e) {
-                                        is UnknownHostException -> {
-                                            e.printStackTrace()
-                                        }
-                                        is ErrnoException -> {
-                                            e.printStackTrace()
-                                        }
-                                        is ConnectException -> {
-                                            e.printStackTrace()
-                                        }
-                                        else -> {
-                                            e.printStackTrace()
-                                        }
+                                    val connection = onLoginPressed(server, port, username)
+                                    if (!isError) {
+                                        afterConnection(connection)
                                     }
+                                } catch (e: Exception) {
+                                    isError = catch(e)
                                     pressed = false
                                 }
                             }
                         }
                     }
-                } else { {} }
+                } else {
+                    {}
+                }
             )
         }
     }
@@ -285,7 +273,6 @@ fun LoginPagePreview() {
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            LoginPage()
             Spacer(
                 modifier = Modifier
                     .height(64.dp)

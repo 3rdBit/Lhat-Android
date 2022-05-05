@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Lhat</string>
+    <string name="fab">New</string>
+    <string name="username_limit_exceeded">Username have to be less than 20 characters!</string>
+    <string name="server_host_hint">Server host</string>
+    <string name="server_port_hint">Port</string>
+    <string name="connect_to_server">Connect</string>
+</resources>

@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
@@ -30,7 +31,11 @@ import de.hammwerk.material.color.util.createPalette
 import de.hammwerk.material.color.util.toRgbColorOrNull
 
 @Composable
-fun Favicon(name: String, modifier: Modifier = Modifier) {
+fun Favicon(
+    name: String,
+    modifier: Modifier = Modifier,
+    shape: Shape = RoundedCornerShape(15.dp)
+) {
     var isBigger = false
     var letter = name.split(" ")[0]
     if (!(letter.isASCII()) or (letter.length > 4)) {
@@ -46,8 +51,8 @@ fun Favicon(name: String, modifier: Modifier = Modifier) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .clip(RoundedCornerShape(15.dp))
+        modifier = modifier
+            .clip(shape)
             .size(60.dp)
             .background(
                 Color(
@@ -118,15 +123,12 @@ fun AutoSizeText(
             if (it.didOverflowHeight && !readyToDraw) {
                 val nextFontSizeValue = fontSizeValue - fontSizeRange.step.value
                 if (nextFontSizeValue <= fontSizeRange.min.value) {
-                    // Reached minimum, set minimum font size and it's readToDraw
                     fontSizeValue = fontSizeRange.min.value
                     readyToDraw = true
                 } else {
-                    // Text doesn't fit yet and haven't reached minimum text range, keep decreasing
                     fontSizeValue = nextFontSizeValue
                 }
             } else {
-                // Text fits before reaching the minimum, it's readyToDraw
                 readyToDraw = true
             }
         },

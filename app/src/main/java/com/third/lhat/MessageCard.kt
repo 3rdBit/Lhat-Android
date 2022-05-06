@@ -11,13 +11,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ktHat.Messages.Message
 
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MessageCard(message: Message) {
+fun MessageCard(
+    message: Message,
+    onClick: (message: Message) -> Unit = {}
+) {
     val viewModel = ViewModel()
 //    val touched by remember { mutableStateOf(message in viewModel.selectedMessage) }
     var touched by remember { mutableStateOf(false) }
@@ -51,6 +55,8 @@ fun MessageCard(message: Message) {
                             if (viewModel.selectedMessage.isEmpty()) {
                                 viewModel.editing = false
                             }
+                        } else {
+                            onClick(message)
                         }
                     }
                 )
@@ -83,4 +89,11 @@ fun MessageCard(message: Message) {
             }
         }
     }
+}
+
+
+@Preview
+@Composable
+fun MessageCardPreview() {
+    
 }

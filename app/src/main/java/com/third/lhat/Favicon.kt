@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
@@ -73,7 +72,7 @@ fun Favicon(name: String, modifier: Modifier = Modifier) {
                 min = 15.sp,
                 max = 35.sp
             ),
-            fontFamily = if (!LocalInspectionMode.current) FontFamily.SansSerif else FontFamily.Default,
+            fontFamily = FontFamily.SansSerif,
             fontWeight = FontWeight.Bold
         )
     }

@@ -1,4 +1,4 @@
-package com.third.lhat.Base.Models
+package com.third.lhat.kthat.Base.Models
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf

@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.ktHat.Models.Connection
-import com.third.lhat.Base.Models.Chat
+import com.third.lhat.kthat.Base.Models.Chat
 import java.net.ConnectException
 import java.net.UnknownHostException
 

@@ -11,7 +11,7 @@ class OnlineList private constructor(var list: List<String>) {
     companion object {
         private lateinit var instance: OnlineList
 
-        internal fun setList(list: List<String>) {
+        fun setList(list: List<String>) {
             if (!this::instance.isInitialized) {
                 instance = OnlineList(list)
             }

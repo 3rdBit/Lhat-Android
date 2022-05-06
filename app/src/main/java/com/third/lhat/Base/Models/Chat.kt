@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.ktHat.Messages.Message
 import com.third.lhat.ViewModel
+import com.third.lhat.flush
 
 var Message.isRead: Boolean
     get() = MessageRead.getRead(this)
@@ -44,9 +45,13 @@ data class Chat private constructor(val messageList: SnapshotStateList<Message>)
         }
 
     fun readAllMessage() {
-        this.messageList.forEach {
+        if (messageList.isEmpty()) {
+            return
+        }
+        messageList.forEach {
             it.isRead = true
         }
+        messageList.flush()
     }
 
     companion object {

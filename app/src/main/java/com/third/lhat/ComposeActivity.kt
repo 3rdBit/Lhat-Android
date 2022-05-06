@@ -191,7 +191,13 @@ fun MessageList(modifier: Modifier = Modifier, chats: Map<String, Chat>, padding
     ) {
         if (chats.size != 0) {
             items(chats.values.toList()) {  // 消息们
-                MessageCard(it.lastMessage)
+                MessageCard(
+                    message = it.lastMessage.normalize(true),
+                    unread = it.unreadMessageNumber,
+                    onClick = {
+                        it.readAllMessage()
+                    }
+                )
             }
         }
         item {  // 底部留白

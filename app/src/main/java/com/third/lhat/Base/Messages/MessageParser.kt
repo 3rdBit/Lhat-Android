@@ -27,4 +27,8 @@ object MessageParser {
 
         return message
     }
+
+    fun parse(message: Message) {
+
+    }
 }

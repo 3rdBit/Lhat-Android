@@ -6,6 +6,7 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
@@ -16,6 +17,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.boundsInParent
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import projekt.cloud.piece.c2.pinyin.C2Pinyin.pinyin
@@ -58,34 +60,40 @@ fun OnlineList(onlineList: List<String>) {
             }
         }
 
-        Column(
-            verticalArrangement = Arrangement.SpaceEvenly,
-            modifier = Modifier
-                .fillMaxHeight()
-                .background(Color.Gray)
-                .pointerInput(Unit) {
-                    detectTapGestures {
-                        updateSelectedIndexIfNeeded(it.y)
+        if (!listState.isOnlyPage()) {
+            Column(
+                verticalArrangement = Arrangement.SpaceEvenly,
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .background(Color.Gray)
+                    .pointerInput(Unit) {
+                        detectTapGestures {
+                            updateSelectedIndexIfNeeded(it.y)
+                        }
                     }
+                    .pointerInput(Unit) {
+                        detectVerticalDragGestures { change, _ ->
+                            updateSelectedIndexIfNeeded(change.position.y)
+                        }
+                    }
+            ) {
+                headers.forEachIndexed { i, header ->
+                    Text(
+                        header,
+                        modifier = Modifier.onGloballyPositioned {
+                            offsets[i] = it.boundsInParent().center.y
+                        }
+                    )
                 }
-                .pointerInput(Unit) {
-                    detectVerticalDragGestures { change, _ ->
-                        updateSelectedIndexIfNeeded(change.position.y)
-                    }
-                }
-        ) {
-            headers.forEachIndexed { i, header ->
-                Text(
-                    header,
-                    modifier = Modifier.onGloballyPositioned {
-                        offsets[i] = it.boundsInParent().center.y
-                    }
-                )
             }
         }
     }
 }
 
+fun LazyListState.isOnlyPage() = layoutInfo.run {
+    visibleItemsInfo.lastOrNull()?.index == totalItemsCount - 1 &&
+            visibleItemsInfo.firstOrNull()?.index == 0
+}
 
 @Preview
 @Composable
@@ -97,6 +105,7 @@ fun OnlineLinePrev() {
 @Composable
 fun OnlineListPreview() {
     val list = mutableListOf("test1", "test2", "test3", "啊啊啊我ptt又掉了", "救救我", "aaawa")
+    list.run { addAll(lastIndex, LoremIpsum().values.first().split(" ").toSet()) }
     OnlineList(list)
 }
 

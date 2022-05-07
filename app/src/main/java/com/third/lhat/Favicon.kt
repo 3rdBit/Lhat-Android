@@ -22,6 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -34,6 +35,15 @@ import de.hammwerk.material.color.util.toRgbColorOrNull
 fun Favicon(
     name: String,
     modifier: Modifier = Modifier,
+    size: Dp = 60.dp,
+    normalFontSizeRange: FontSizeRange = FontSizeRange(
+        min = 10.sp,
+        max = 20.sp
+    ),
+    biggerFontSizeRange: FontSizeRange = FontSizeRange(
+        min = 15.sp,
+        max = 35.sp
+    ),
     shape: Shape = RoundedCornerShape(15.dp)
 ) {
     var isBigger = false
@@ -53,7 +63,7 @@ fun Favicon(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .clip(shape)
-            .size(60.dp)
+            .size(size)
             .background(
                 Color(
                     colorBg.red.toFloat(),
@@ -70,13 +80,10 @@ fun Favicon(
                 colorText.green.toFloat(),
                 colorText.blue.toFloat()
             ),
-            fontSizeRange = if (!isBigger) FontSizeRange(
-                min = 10.sp,
-                max = 20.sp
-            ) else FontSizeRange(
-                min = 15.sp,
-                max = 35.sp
-            ),
+            fontSizeRange = if (!isBigger)
+                normalFontSizeRange
+            else
+                biggerFontSizeRange,
             fontFamily = FontFamily.SansSerif,
             fontWeight = FontWeight.Bold
         )

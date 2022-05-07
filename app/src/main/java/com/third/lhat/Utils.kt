@@ -123,7 +123,7 @@ fun String.normalize(): String {
 }
 
 fun String.minimize(
-    characters: Int = 32,
+    characters: Int = 30,
     endsTo: String = "…"
 ): String {
     val stringBuilder = StringBuilder()

@@ -8,6 +8,7 @@ import android.os.Parcelable
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material3.ColorScheme
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -20,6 +21,8 @@ import androidx.compose.ui.unit.dp
 import com.ktHat.Messages.Message
 import com.ktHat.Messages.TextMessage
 import java.io.Serializable
+import java.text.Collator
+import java.util.*
 import kotlin.math.ln
 
 fun Color.applyTonalElevation(colorScheme: ColorScheme, elevation: Dp): Color {
@@ -141,4 +144,18 @@ fun String.minimize(
         stringBuilder.append(endsTo)
     }
     return stringBuilder.toString()
+}
+
+
+fun <T> List<T>.sortedByLocale(locale: Locale): List<T> {
+    return this.sortedWith { a, b ->
+        Collator.getInstance(locale).compare(a, b)
+    }
+}
+
+fun getLocale(): Locale = Resources.getSystem().configuration.locales[0]
+
+fun LazyListState.isOnlyPage() = layoutInfo.run {
+    visibleItemsInfo.lastOrNull()?.index == totalItemsCount - 1 &&
+            visibleItemsInfo.firstOrNull()?.index == 0
 }

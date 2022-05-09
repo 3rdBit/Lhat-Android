@@ -1,13 +1,15 @@
 package com.third.lhat
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
@@ -18,19 +20,25 @@ import projekt.cloud.piece.c2.pinyin.C2Pinyin.pinyin
 fun OnlineList(onlineList: List<String>) {
     val items = remember { onlineList.sortedBy { it.first().pinyin.first().uppercase() } }
     val headers = remember { items.map { it.first().pinyin.first().uppercase() }.toSet().toList() }
-    Row {
+    Box(
+        contentAlignment = Alignment.TopEnd
+    ) {
         val listState = rememberLazyListState()
         LazyColumn(
             state = listState,
-            modifier = Modifier.weight(1f),
-            contentPadding = PaddingValues(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(items) {
                 OnlineLine(it)
             }
         }
-        AlphabeticBar(items, headers, listState)
+        AlphabeticBar(
+            items = items,
+            headers = headers,
+            listState = listState
+        )
     }
 }
 

@@ -20,7 +20,7 @@ fun OnlineLine(username: String) {
         Favicon(
             name = username,
             shape = CircleShape,
-            size = 30.dp,
+            size = 32.dp,
             normalFontSizeRange = FontSizeRange(5.sp, 10.sp),
             biggerFontSizeRange = FontSizeRange(10.sp, 15.sp)
         )
@@ -31,7 +31,7 @@ fun OnlineLine(username: String) {
         Text(
             text = username,
             maxLines = 1,
-            fontSize = 16.sp
+            fontSize = 18.sp
         )
     }
 }

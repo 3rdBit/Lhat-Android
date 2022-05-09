@@ -5,4 +5,5 @@
     <string name="server_host_hint">Server host</string>
     <string name="server_port_hint">Port</string>
     <string name="connect_to_server">Connect</string>
+    <string name="chat_type_hint">Message</string>
 </resources>

@@ -1,39 +1,73 @@
 package com.third.lhat
 
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Send
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun ChattingBar() {
-    Row {
-        TextingField()
+    var message by remember { mutableStateOf("") }
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+
+    ) {
+        TextingField(
+            value = message,
+            onValueChange = {
+                message = it
+            },
+            modifier = Modifier
+                .weight(7f)
+        )
+        CircularIconButton(
+            onClick = { /*TODO*/ },
+            containerColor = Color.Transparent,
+            modifier = Modifier
+                .size(48.dp)
+        ) {
+            Icon(
+                Icons.Default.Send,
+                contentDescription = "Send",
+                modifier = Modifier
+                    .fillMaxSize(0.5f)
+            )
+
+        }
     }
 }
 
+
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TextingField() {
-    var message by remember { mutableStateOf("") }
-    BasicTextField(
-        value = message,
-        onValueChange = {
-            message = it
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(80.dp)
-    ) {
-        if (message.isEmpty()) {
-            Text(stringResource(R.string.chat_type_hint))
-        }
-    }
+fun TextingField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    TextField(
+        value = value,
+        onValueChange = { onValueChange(it) },
+        colors = TextFieldDefaults.textFieldColors(
+            backgroundColor = Color.Transparent,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent,
+            disabledTextColor = Color.Transparent
+        ),
+        placeholder = { Text(stringResource(R.string.chat_type_hint)) },
+        modifier = modifier
+    )
 }
 
 

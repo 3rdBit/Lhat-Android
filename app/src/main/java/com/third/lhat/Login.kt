@@ -2,10 +2,7 @@ package com.third.lhat
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateIntAsState
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -16,10 +13,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.onFocusEvent
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.integerResource
 import androidx.compose.ui.res.stringResource
@@ -198,7 +193,6 @@ fun LoginPage(
             CircularIconButton(
                 modifier = Modifier
                     .size(100.dp),
-                contentColor = confirmButtonIconColor,
                 containerColor = confirmButtonBackgroundColor,
                 onClick = if (!pressed) {
                     if (
@@ -229,7 +223,15 @@ fun LoginPage(
                 } else {
                     {}
                 }
-            )
+            ) {
+                Icon(
+                    tint = confirmButtonIconColor,
+                    imageVector = Icons.Default.Check,
+                    contentDescription = stringResource(R.string.connect_to_server),
+                    modifier = Modifier
+                        .fillMaxSize(0.5f)
+                )
+            }
         }
     }
 }
@@ -237,31 +239,6 @@ fun LoginPage(
 fun getHost(string: String): String {
     val uri = URI(string)
     return uri.host ?: string
-}
-
-@Composable
-fun CircularIconButton(
-    modifier: Modifier = Modifier,
-    contentColor: Color,
-    containerColor: Color,
-    onClick: () -> Unit = {}
-) {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = modifier
-            .clip(CircleShape)
-            .background(containerColor)
-            .clickable { onClick() }
-    ) {
-        Icon(
-            tint = contentColor,
-            imageVector = Icons.Default.Check,
-            contentDescription = stringResource(R.string.connect_to_server),
-            modifier = Modifier
-                .fillMaxSize(0.5f)
-        )
-    }
-
 }
 
 @Preview

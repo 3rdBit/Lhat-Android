@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ktHat.Messages.Message
 import com.ktHat.Messages.TextMessage
 
@@ -28,7 +29,7 @@ fun MessageCard(
     unread: Int = 0,
     onClick: (/* message: Message */) -> Unit = {},
 ) {
-    val viewModel = ViewModel()
+    val viewModel: ViewModel = viewModel()
 //    val touched by remember { mutableStateOf(message in viewModel.selectedMessage) }
     var touched by remember { mutableStateOf(false) }
     Box(
@@ -45,22 +46,22 @@ fun MessageCard(
                 onLongClick = {
                     if (!viewModel.editing) {
                         viewModel.editing = true
-                        viewModel.selectedMessage.add(message)
+                        viewModel.editingSelectedMessage.add(message)
                         touched = true
                     }
-                    if (viewModel.selectedMessage.isEmpty()) {
+                    if (viewModel.editingSelectedMessage.isEmpty()) {
                         viewModel.editing = false
                     }
                 },
                 onClick = {
                     if (viewModel.editing) {
                         if (touched) {
-                            viewModel.selectedMessage.remove(message)
+                            viewModel.editingSelectedMessage.remove(message)
                         } else {
-                            viewModel.selectedMessage.add(message)
+                            viewModel.editingSelectedMessage.add(message)
                         }
                         touched = !touched
-                        if (viewModel.selectedMessage.isEmpty()) {
+                        if (viewModel.editingSelectedMessage.isEmpty()) {
                             viewModel.editing = false
                         }
                     } else {

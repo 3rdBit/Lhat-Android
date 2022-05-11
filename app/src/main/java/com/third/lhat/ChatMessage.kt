@@ -18,12 +18,36 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ktHat.Messages.Message
 import kotlinx.coroutines.launch
 
 @Composable
 fun ChatMessage(
     modifier: Modifier = Modifier,
-    username: String = ViewModel().username,
+    message: Message,
+    containerColorOthers: Color = Color.White,
+    contentColorOthers: Color = Color.Black,
+    containerColorMe: Color = MaterialTheme.colorScheme.primaryContainer,
+    contentColorMe: Color = MaterialTheme.colorScheme.onPrimaryContainer
+) {
+    val viewModel: ViewModel = viewModel()
+    ChatMessage(
+        modifier = modifier,
+        username = message.sender,
+        text = message.rawMessage,
+        me = message.sender == viewModel.username,
+        containerColorOthers = containerColorOthers,
+        contentColorOthers = contentColorOthers,
+        containerColorMe = containerColorMe,
+        contentColorMe = contentColorMe
+    )
+}
+
+@Composable
+fun ChatMessage(
+    modifier: Modifier = Modifier,
+    username: String = (viewModel() as ViewModel).username,
     text: String,
     me: Boolean,
     containerColorOthers: Color = Color.White,

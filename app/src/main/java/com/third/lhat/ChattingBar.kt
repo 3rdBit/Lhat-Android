@@ -1,5 +1,6 @@
 package com.third.lhat
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
@@ -15,11 +16,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ChattingBar() {
+fun ChattingBar(
+    onClickAndClear: (strMessage: String) -> Unit = {}
+) {
     var message by remember { mutableStateOf("") }
     Row(
         verticalAlignment = Alignment.CenterVertically,
-
+        modifier = Modifier.background(MaterialTheme.colorScheme.background)
     ) {
         TextingField(
             value = message,
@@ -30,7 +33,13 @@ fun ChattingBar() {
                 .weight(7f)
         )
         CircularIconButton(
-            onClick = { /*TODO*/ },
+            onClick = {
+                if (message.isNotBlank()) {
+                    val _message = message
+                    message = ""
+                    onClickAndClear(_message)
+                }
+            },
             containerColor = Color.Transparent,
             modifier = Modifier
                 .size(48.dp)
@@ -45,7 +54,6 @@ fun ChattingBar() {
         }
     }
 }
-
 
 
 @OptIn(ExperimentalMaterial3Api::class)

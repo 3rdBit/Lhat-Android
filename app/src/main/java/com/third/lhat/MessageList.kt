@@ -9,19 +9,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.third.lhat.kthat.Base.Models.Chat
 
 @Composable
 fun MessageList(modifier: Modifier = Modifier, chats: Map<String, Chat>, padding: Dp = 0.dp) {
+    val viewModel: ViewModel = viewModel()
     LazyColumn(
         modifier = modifier,
     ) {
-        if (chats.size != 0) {
+        if (chats.isNotEmpty()) {
             items(chats.values.toList()) {  // 消息们
                 MessageCard(
                     message = it.lastMessage.normalize(true),
                     unread = it.unreadMessageNumber,
                     onClick = {
+                        viewModel.currentChat = it
                         it.readAllMessage()
                     }
                 )

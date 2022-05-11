@@ -21,9 +21,11 @@ import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.ktHat.Models.Connection
+import com.ktHat.Statics.Objects
 import com.third.lhat.kthat.Base.Models.Chat
 import java.net.ConnectException
 import java.net.UnknownHostException
@@ -98,6 +100,25 @@ fun Main(chatList: Map<String, Chat>) {
                 )
             }
         }
+        Box(
+            modifier = Modifier
+            .layout { measurable, constraints ->
+                val placeable = measurable.measure(constraints)
+                val chatOffset = if (
+                    viewModel.currentChat != Chat.emptyChat
+                ) {
+                    0
+                } else {
+                    placeable.width
+                }
+                layout(placeable.width, placeable.height) {
+                    placeable.placeRelative(chatOffset, 0)
+                }
+            }
+            .fillMaxSize()
+        ) {
+            ChatPage(viewModel.currentChat)
+        }
     }
 }
 
@@ -107,7 +128,8 @@ class ComposeActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val viewModel = ViewModel()
+        val viewModel = ViewModelProvider(this).get(ViewModel::class.java)
+        Objects.viewModel = viewModel
         setContent {
             var showMainActivity by remember { mutableStateOf(false) }
             AppTheme() {
@@ -150,6 +172,7 @@ class ComposeActivity : ComponentActivity() {
                             }
                         },
                         afterConnection = { connection ->
+                            viewModel.connection = connection
                             showMainActivity = true
                         }
                     )
@@ -162,7 +185,7 @@ class ComposeActivity : ComponentActivity() {
                 Box(modifier = Modifier
                     .layout { measurable, constraints ->
                         val placeable = measurable.measure(constraints)
-                        val offset = if (showMainActivity) {
+                        val offset = if (showMainActivity or (viewModel.connection != null)) {
                             0
                         } else {
                             placeable.width
@@ -177,6 +200,11 @@ class ComposeActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        ViewModelProvider(this).get(ViewModel::class.java).connection?.close()
+        super.onDestroy()
     }
 }
 

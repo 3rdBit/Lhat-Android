@@ -6,11 +6,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.ktHat.Messages.Message
+import com.ktHat.Models.Connection
+import com.third.lhat.kthat.Base.Models.Chat
 
 class ViewModel: ViewModel() {
     var selectedBar by mutableStateOf(0)
     var bottomTabVisibility by mutableStateOf(true)
     var editing by mutableStateOf(false)
-    val selectedMessage = mutableStateListOf<Message>()
+    val editingSelectedMessage = mutableStateListOf<Message>()
     var username by mutableStateOf("")
+    var connection: Connection? = null
+    var currentChat: Chat by mutableStateOf(Chat.emptyChat)
 }

@@ -4,8 +4,10 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.ktHat.Messages.Message
-import com.third.lhat.ViewModel
+import com.ktHat.Messages.TextMessage
+import com.ktHat.Statics.Objects.viewModel
 import com.third.lhat.flush
+import com.third.lhat.kthat.Base.Messages.EmptyMessage
 
 var Message.isRead: Boolean
     get() = MessageRead.getRead(this)
@@ -36,6 +38,12 @@ object MessageRead {
 data class Chat private constructor(val messageList: SnapshotStateList<Message>) {
     constructor(message: Message) : this(mutableStateListOf(message))
 
+    private val me = viewModel.username
+
+    private val others = lastMessage.run {
+        if (sender == viewModel.username) receiver else sender
+    }
+
     val lastMessage: Message
         get() = messageList.last()
 
@@ -54,10 +62,21 @@ data class Chat private constructor(val messageList: SnapshotStateList<Message>)
         messageList.flush()
     }
 
+    fun newTextMessage(text: String): TextMessage {
+        return TextMessage(
+            sender = me,
+            receiver = others,
+            rawMessage = text
+        )
+    }
+
     companion object {
+//        private val viewModel: ViewModel
+//            get() = ViewModelProvider(ComposeActivity()).get(ViewModel::class.java)
+        val emptyChat = Chat(EmptyMessage())
+
         val chatMap = mutableStateMapOf<String, Chat>()
         fun addMessage(message: Message) {
-            val viewModel = ViewModel()
             val to = if (message.sender != viewModel.username) {
                 message.sender
             } else {

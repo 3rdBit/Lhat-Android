@@ -22,11 +22,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ktHat.Models.Connection
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.ktHat.Utils.runOnIO
 import java.net.URI
-import kotlin.coroutines.EmptyCoroutineContext
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -206,8 +203,7 @@ fun LoginPage(
                         {
                             pressed = true
                             var isError = false
-                            val coroutineScope = CoroutineScope(EmptyCoroutineContext)
-                            coroutineScope.launch(Dispatchers.IO) {
+                            runOnIO {
                                 try {
                                     val connection = onLoginPressed(server, port, username)
                                     if (!isError) {

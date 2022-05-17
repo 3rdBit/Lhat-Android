@@ -25,4 +25,6 @@ jobs:
          key_password: ${{ secrets.key_password }}
          
      - name: Push
-       uses: ludeeus/action-push@0.0.1
+       uses: ad-m/github-push-action@v0.6.0
+       with:
+         github_token: $\{{ secrets.GITHUB_TOKEN }}

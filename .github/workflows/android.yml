@@ -10,26 +10,19 @@ jobs:
    steps:
      - name: Checkout
        uses: actions/checkout@v2.4.0
-     - name: Branch name
-       run: echo running on branch ${GITHUB_REF##*/}
-     - name: Setup JDK
-       uses: actions/setup-java@v2.5.0
+     - name: Build Signed APK
+       # You may pin to the exact commit or the version.
+       # uses: victorbnl/build-signed-apk@131e59d4deaf2fb9d2aadb555b2ac131affeef5f
+       uses: victorbnl/build-signed-apk@v1.0.0
        with:
-         distribution: temurin
-         java-version: "11"
-     - name: Set execution flag for gradlew
-       run: chmod +x gradlew
-     - name: Build APK
-       run: bash ./gradlew assembleDebug --stacktrace
-     - name: Commit files
-       run: |
-         echo ${{ github.ref }}
-         git add .
-         git config --local user.email "build@shacha.example"
-         git config --local user.name "wwwwwwwwwww"
-         git commit -m "build APK" -a | exit 0
-     - name: Push changes
-       if: github.ref == 'refs/heads/master'
-       uses: ad-m/github-push-action@master
-       with:
-         github_token: ${{ secrets.GITHUB_TOKEN }}
+         # Keystore file encoded as base64
+         keystore: ${{ secrets.keystore }}
+         # Keystore file password
+         keystore_password: ${{ secrets.keystore_password }}
+         # Key alias
+         key_alias: ${{ secrets.key_alias }}
+         # Key password
+         key_password: ${{ secrets.key_password }}
+         
+     - name: Push
+       uses: ludeeus/action-push@0.0.1

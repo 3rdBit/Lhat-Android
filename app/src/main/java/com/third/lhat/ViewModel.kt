@@ -7,7 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.ktHat.Messages.Message
 import com.ktHat.Models.Connection
-import com.third.lhat.kthat.Base.Models.Chat
+import com.third.lhat.dependency.kthat.base.models.Chat
 
 class ViewModel: ViewModel() {
     var selectedBar by mutableStateOf(0)
@@ -17,4 +17,5 @@ class ViewModel: ViewModel() {
     var username by mutableStateOf("")
     var connection: Connection? = null
     var currentChat: Chat by mutableStateOf(Chat.emptyChat)
+    var groupName: String? = null
 }

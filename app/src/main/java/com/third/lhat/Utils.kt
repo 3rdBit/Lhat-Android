@@ -75,7 +75,7 @@ interface Startable {
     }
 }
 
-
+@Suppress("KotlinConstantConditions")
 private fun Intent.putExtra(first: String, second: Any) {
     when (second) {
         is Bundle -> this.putExtra(first, second)
@@ -155,7 +155,12 @@ fun <T> List<T>.sortedByLocale(locale: Locale): List<T> {
 
 fun getLocale(): Locale = Resources.getSystem().configuration.locales[0]
 
+
 fun LazyListState.isOnlyPage() = layoutInfo.run {
     visibleItemsInfo.lastOrNull()?.index == totalItemsCount - 1 &&
             visibleItemsInfo.firstOrNull()?.index == 0
 }
+
+fun Char.isASCII() = this.code in 0..127
+
+fun String.isASCII() = this.all { it.isASCII() }

@@ -3,8 +3,11 @@
     <string name="app_name">Lhat</string>
     <string name="fab">新的</string>
     <string name="username_limit_exceeded">用户名需在二十个字符内！</string>
+    <string name="username_empty">用户名不能为空！</string>
     <string name="server_host_hint">服务器地址</string>
     <string name="server_port_hint">端口</string>
+    <string name="server_host_empty">服务器地址不能为空！</string>
+    <string name="server_port_empty">端口不能为空！</string>
     <string name="connect_to_server">登录</string>
     <string name="chat_type_hint">在此输入消息…</string>
 </resources>

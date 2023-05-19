@@ -17,7 +17,6 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity(), Startable {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Thread.setDefaultUncaughtExceptionHandler(GlobalExceptionHandler())
-        Objects.applicationContext = applicationContext
         ActivityCollector.addActivity(this)
         Log.d("BaseActivity", localClassName)
         binding = ViewBindingUtil.inflateWithGeneric(this, layoutInflater)

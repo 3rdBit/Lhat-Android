@@ -1,5 +1,6 @@
 package com.ktHat.Messages
 
+import com.ktHat.Utils.getTime
 import com.third.lhat.Objects
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -15,7 +16,7 @@ class UserRegMessage private constructor(
     @Json(name = "by") override var sender: String = "",
     @Json(name = "to") override var receiver: String = "",
     override val type: MessageType = MessageType.USER_NAME,
-    override val time: Double = -1.0,
+    override val time: Double = getTime(),
     @Json(name = "message") override val rawMessage: String,
     override val file: String? = null,
     //override val end: String = END

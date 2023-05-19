@@ -27,7 +27,7 @@ abstract class Message(
     open val file: String? = null,
     //override val end: String = END
 ) {
-    var isInGroup = false
+    @Json(ignore = true) var isInGroup = false
     var member: String? = null
     abstract val json: String
     abstract class Parse {

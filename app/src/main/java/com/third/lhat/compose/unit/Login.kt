@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ktHat.Models.Connection
 import com.ktHat.Utils.runOnIO
+import com.ktHat.Utils.runOnMain
 import com.third.lhat.AppTheme
 import com.third.lhat.ClearRippleTheme
 import com.third.lhat.R
@@ -33,7 +34,7 @@ import java.net.URI
 fun LoginPage(
     onLoginPressed: (server: String, port: String, username: String) -> Connection,
     onError: (e: Exception) -> Unit,
-    afterConnection: (connection: Connection) -> Unit,
+    afterConnection: (connection: Connection, server: String, port: String, username: String) -> Unit,
 ) {
     val colorScheme = MaterialTheme.colorScheme
 
@@ -43,14 +44,22 @@ fun LoginPage(
 
     var username by remember { mutableStateOf("") }
 
-    var usernameLimitExceeded by remember { mutableStateOf(false) }
-
     val isFocused = remember { mutableStateListOf(false, false, false) }
 
-    var pressed by remember { mutableStateOf(false) }
+    var loginPressed by remember { mutableStateOf(false) }
+
+    var displayError by remember { mutableStateOf(false) }
+
+    val errors = remember {
+        mutableStateMapOf<Field, List<Error>>(
+            Field.USERNAME to listOf(Error.FIELD_IS_EMPTY),
+            Field.PORT to listOf(Error.FIELD_IS_EMPTY),
+            Field.SERVER to listOf(Error.FIELD_IS_EMPTY)
+        )
+    }
 
     val hintEnd by animateIntAsState(
-        if (usernameLimitExceeded) {
+        if (errors[Field.USERNAME]!!.contains(Error.LENGTH_EXCEEDED)) {
             stringResource(R.string.username_limit_exceeded).lastIndex  //第十二个字符为最后一个字符
         } else {
             integerResource(R.integer.username_limit_exceeded_index)
@@ -58,9 +67,7 @@ fun LoginPage(
     )
 
     val usernameBackgroundColor by animateColorAsState(
-        if (usernameLimitExceeded) {
-            colorScheme.errorContainer
-        } else if (isFocused[0]) {
+        if (isFocused[0]) {
             colorScheme.primaryContainer
         } else {
             colorScheme.background
@@ -84,11 +91,7 @@ fun LoginPage(
     )
 
     val confirmButtonBackgroundColor by animateColorAsState(
-        if (server.isBlank() ||
-            port.isBlank() ||
-            username.isBlank() ||
-            usernameLimitExceeded
-        ) {
+        if (errors.values.any { it.isNotEmpty() }) {
             colorScheme.surfaceVariant
         } else {
             colorScheme.primaryContainer
@@ -96,32 +99,33 @@ fun LoginPage(
     )
 
     val confirmButtonIconColor by animateColorAsState(
-        if (server.isBlank() ||
-            port.isBlank() ||
-            username.isBlank() ||
-            usernameLimitExceeded
-        ) {
+        if (errors.values.any { it.isNotEmpty() }) {
             colorScheme.onSurfaceVariant
         } else {
             colorScheme.primary
         }
     )
     Column(
-        modifier = Modifier.padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier.padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val focusManager = LocalFocusManager.current
-        OutlinedTextField(
-            isError = (usernameLimitExceeded),
+        OutlinedTextField(isError = displayError && errors[Field.USERNAME]!!.isNotEmpty(),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = usernameBackgroundColor,
                 unfocusedContainerColor = usernameBackgroundColor,
             ),
             label = {
-                Text(
-                    text = stringResource(R.string.username_limit_exceeded).substring(0..hintEnd),
-                    Modifier.background(Color.Transparent)
-                )
+                if (displayError && errors[Field.USERNAME]!!.contains(Error.FIELD_IS_EMPTY)) {
+                    Text(
+                        text = stringResource(R.string.username_empty),
+                        Modifier.background(Color.Transparent)
+                    )
+                } else {
+                    Text(
+                        text = stringResource(R.string.username_limit_exceeded).substring(0..hintEnd),
+                        Modifier.background(Color.Transparent)
+                    )
+                }
             },
             value = username,
             shape = RoundedCornerShape(16.dp),
@@ -133,19 +137,31 @@ fun LoginPage(
                 },
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text),
             onValueChange = {
-                usernameLimitExceeded = it
-                    .replace("[\u4E00-\u9FA5]".toRegex(), "")
-                    .length.run { this + (it.length - this) * 2 } > 20
+                val usernameLimitExceeded = it.replace(
+                    "[\u4E00-\u9FA5]".toRegex(), ""
+                ).length.run { this + (it.length - this) * 2 } > 20
+                if (usernameLimitExceeded) errors[Field.USERNAME] =
+                    errors[Field.USERNAME]!! + Error.LENGTH_EXCEEDED
+                if (errors[Field.USERNAME]!!.contains(Error.FIELD_IS_EMPTY)) {
+                    errors[Field.USERNAME] = errors[Field.USERNAME]!! - Error.FIELD_IS_EMPTY
+                }
                 username = it.replace("[^\\u4E00-\\u9FA5A-Za-z0-9_]+".toRegex(), "")
             })
         Spacer(Modifier.size(16.dp))
         Row {
-            OutlinedTextField(
+            OutlinedTextField(isError = displayError && errors[Field.SERVER]!!.isNotEmpty(),
                 label = {
-                    Text(
-                        stringResource(R.string.server_host_hint),
-                        Modifier.background(Color.Transparent)
-                    )
+                    if (displayError && errors[Field.SERVER]!!.contains(Error.FIELD_IS_EMPTY)) {
+                        Text(
+                            stringResource(R.string.server_host_empty),
+                            Modifier.background(Color.Transparent)
+                        )
+                    } else {
+                        Text(
+                            stringResource(R.string.server_host_hint),
+                            Modifier.background(Color.Transparent)
+                        )
+                    }
                 },
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = serverIpBackgroundColor,
@@ -161,23 +177,27 @@ fun LoginPage(
                 singleLine = true,
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Ascii),
                 onValueChange = { str ->
+                    if (errors[Field.SERVER]!!.contains(Error.FIELD_IS_EMPTY)) {
+                        errors[Field.SERVER] = errors[Field.SERVER]!! - Error.FIELD_IS_EMPTY
+                    }
                     if (str.contains("(?<!https?)[:：]".toRegex())) {
-
                         val split = str.split("(?<!https?)[:：]".toRegex()).toMutableList()
                         server = split[0]
                         split.removeIf { it.isBlank() }
                         if (split.size > 1) {
                             port = split[1]
+                            if (errors[Field.PORT]!!.contains(Error.FIELD_IS_EMPTY)) {
+                                errors[Field.PORT] = errors[Field.PORT]!! - Error.FIELD_IS_EMPTY
+                            }
                         } else {
                             focusManager.moveFocus(FocusDirection.Right)
                         }
                     } else {
                         server = str
                     }
-                }
-            )
+                })
             Spacer(Modifier.size(8.dp))
-            OutlinedTextField(
+            OutlinedTextField(isError = displayError && errors[Field.PORT]!!.isNotEmpty(),
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = serverPortBackgroundColor,
                     unfocusedContainerColor = serverPortBackgroundColor,
@@ -188,61 +208,84 @@ fun LoginPage(
                     }
                     .weight(1f),
                 label = {
-                    Text(
-                        stringResource(R.string.server_port_hint),
-                        Modifier.background(Color.Transparent)
-                    )
+                    if (displayError && errors[Field.PORT]!!.contains(Error.FIELD_IS_EMPTY)) {
+                        Text(
+                            stringResource(R.string.server_port_empty),
+                            Modifier.background(Color.Transparent)
+                        )
+                    } else {
+                        Text(
+                            stringResource(R.string.server_port_hint),
+                            Modifier.background(Color.Transparent)
+                        )
+                    }
                 },
                 value = port,
                 shape = RoundedCornerShape(14.dp),
                 singleLine = true,
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Decimal),
                 onValueChange = { text ->
-                    port = text.filter { it.isDigit() }.take(5)
-                }
-            )
+                    val _port = text.filter { it.isDigit() }.take(5)
+                    port = _port
+                    if (text != _port) {
+                        return@OutlinedTextField
+                    }
+                    if (errors[Field.PORT]!!.contains(Error.FIELD_IS_EMPTY)) {
+                        errors[Field.PORT] = errors[Field.PORT]!! - Error.FIELD_IS_EMPTY
+                    }
+                })
         }
         Spacer(Modifier.size(96.dp))
         CompositionLocalProvider(
             LocalRippleTheme provides ClearRippleTheme
         ) {
-            CircularIconButton(
-                modifier = Modifier
-                    .size(100.dp),
+            val isIllegal = {
+                server.isBlank() || port.isBlank() || username.isBlank() || errors[Field.USERNAME]!!.contains(
+                    Error.LENGTH_EXCEEDED
+                )
+            }
+            CircularIconButton(modifier = Modifier.size(100.dp),
                 containerColor = confirmButtonBackgroundColor,
-                onClick = if (!pressed) {
-                    if (
-                        server.isBlank() ||
-                        port.isBlank() ||
-                        username.isBlank() ||
-                        usernameLimitExceeded
-                    ) {
-                        {}
+                onClick = if (!loginPressed) {
+                    if (isIllegal()) {
+                        lambda@{
+                            if (server.isBlank()) {
+                                errors[Field.SERVER] = errors[Field.SERVER]!! + Error.FIELD_IS_EMPTY
+                            }
+                            if (port.isBlank()) {
+                                errors[Field.PORT] = errors[Field.PORT]!! + Error.FIELD_IS_EMPTY
+                            }
+                            if (username.isBlank()) {
+                                errors[Field.USERNAME] =
+                                    errors[Field.USERNAME]!! + Error.FIELD_IS_EMPTY
+                            }
+                            displayError = true
+                        }
                     } else {
                         {
-                            pressed = true
+                            loginPressed = true
                             //error here
                             runOnIO {
                                 try {
                                     val connection = onLoginPressed(server, port, username)
-                                    afterConnection(connection)
+                                    afterConnection(connection, server, port, username)
                                 } catch (e: Exception) {
-                                    pressed = false
-                                    onError(e)
+                                    runOnMain {
+                                        loginPressed = false
+                                        onError(e)
+                                    }
                                 }
                             }
                         }
                     }
                 } else {
                     {}
-                }
-            ) {
+                }) {
                 Icon(
                     tint = confirmButtonIconColor,
                     imageVector = Icons.Default.Check,
                     contentDescription = stringResource(R.string.connect_to_server),
-                    modifier = Modifier
-                        .fillMaxSize(0.5f)
+                    modifier = Modifier.fillMaxSize(0.5f)
                 )
             }
         }
@@ -259,9 +302,7 @@ fun getHost(string: String): String {
 fun LoginPagePreview() {
     AppTheme {
         Column(
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .fillMaxSize()
+            verticalArrangement = Arrangement.Center, modifier = Modifier.fillMaxSize()
         ) {
             Spacer(
                 modifier = Modifier
@@ -271,4 +312,12 @@ fun LoginPagePreview() {
         }
     }
 
+}
+
+private enum class Field {
+    SERVER, USERNAME, PORT
+}
+
+private enum class Error {
+    FIELD_IS_EMPTY, LENGTH_EXCEEDED
 }

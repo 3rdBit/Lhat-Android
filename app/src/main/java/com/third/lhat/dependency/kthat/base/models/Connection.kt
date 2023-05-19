@@ -30,7 +30,7 @@ import java.net.Socket
  *      您可以操作此协程。
  * connection.close() - 关闭连接。
  */
-val TAG = "Connection"
+const val TAG = "Connection"
 class Connection(IP: String, port: Int, val onClose: () -> Unit) {
 
     constructor(IP: String, port: Int, userName: String, onClose: () -> Unit) : this(IP, port, onClose) {

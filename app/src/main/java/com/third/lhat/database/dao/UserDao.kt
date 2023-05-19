@@ -13,10 +13,10 @@ import com.third.lhat.database.model.UserWithServer
 @Dao
 interface UserDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert(user: User)
+    fun insert(user: User): Long
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertAll(vararg user: User)
+    fun insertAll(vararg user: User): List<Long>
 
     @Delete
     fun delete(user: User)
@@ -31,10 +31,10 @@ interface UserDao {
     fun updateAll(vararg user: User)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertOrUpdate(user: User)
+    fun insertOrUpdate(user: User): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertOrUpdateAll(vararg user: User)
+    fun insertOrUpdateAll(vararg user: User): List<Long>
 
     @Transaction
     @Query("SELECT * FROM User " +

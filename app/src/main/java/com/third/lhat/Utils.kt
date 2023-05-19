@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.res.Resources
 import android.os.Bundle
 import android.os.Parcelable
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -18,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.google.android.material.snackbar.BaseTransientBottomBar.Duration
 import com.ktHat.Messages.Message
 import com.ktHat.Messages.TextMessage
 import java.io.Serializable
@@ -53,6 +55,7 @@ inline fun Modifier.noRippleClickable(crossinline onClick: () -> Unit): Modifier
     }
 }
 
+@Suppress("unused")
 interface Startable {
     fun start(
         context: Context,
@@ -164,3 +167,11 @@ fun LazyListState.isOnlyPage() = layoutInfo.run {
 fun Char.isASCII() = this.code in 0..127
 
 fun String.isASCII() = this.all { it.isASCII() }
+
+fun makeToast(
+    context: Context,
+    text: String,
+    @Duration duration: Int = Toast.LENGTH_SHORT
+){
+    Toast.makeText(context, text, duration).show()
+}

@@ -20,6 +20,9 @@ object Objects{
     val listAdapter: JsonAdapter<List<String>> = moshi.adapter(type)
     var viewModel: ViewModel = ViewModel()
     var composeActivityInstance: ViewModelStoreOwner? = null
+}
+
+object Database {
     lateinit var applicationContext: Context
     val db by lazy {
         Room.databaseBuilder(

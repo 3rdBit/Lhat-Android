@@ -11,6 +11,7 @@ class ComposeActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Database.applicationContext = applicationContext
         setContent(content = Main())
     }
 

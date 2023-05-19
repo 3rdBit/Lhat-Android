@@ -9,16 +9,16 @@ import com.third.lhat.database.model.Server
 @Dao
 interface ServerDao {
     @Insert
-    fun insert(server: Server)
+    fun insert(server: Server): Long
 
     @Insert
-    fun insertAll(vararg server: Server)
+    fun insertAll(vararg server: Server): List<Long>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertOrUpdate(server: Server)
+    fun insertOrUpdate(server: Server): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertOrUpdateAll(vararg server: Server)
+    fun insertOrUpdateAll(vararg server: Server): List<Long>
 
     @Query("SELECT * from Server")
     fun queryAll(): List<Server>

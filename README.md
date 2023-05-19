@@ -4,7 +4,7 @@
 ***TODO:***
 - [ ] Initiate the talk, using OnlineList
 - [ ] Message storage based on SQLite 
-- [ ] Try to make connection closing, **quote**, normal, **quote**.
+- [x] Try to make connection closing, **quote**, normal, **quote**.
 - [ ] Making the Top Appbar
 - [ ] Fixing the TapBack, which are showing strange at the moment.
 - [ ] AFTER ALL, try to make our UI better. (Most hard part)

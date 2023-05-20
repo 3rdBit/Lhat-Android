@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.ktHat.Models.Connection
+import com.third.lhat.dependency.kthat.base.models.Connection
 import com.third.lhat.ActivityCollector
 import com.third.lhat.AppTheme
 import com.third.lhat.Constants

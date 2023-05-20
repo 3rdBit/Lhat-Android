@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.ktHat.Messages.Message
-import com.ktHat.Models.Connection
+import com.third.lhat.dependency.kthat.base.models.Connection
 import com.third.lhat.dependency.kthat.base.models.Chat
 
 class ViewModel: ViewModel() {

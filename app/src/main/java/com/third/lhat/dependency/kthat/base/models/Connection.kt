@@ -1,13 +1,13 @@
-package com.ktHat.Models
+package com.third.lhat.dependency.kthat.base.models
 
 import android.util.Log
 import com.ktHat.Messages.Message
 import com.ktHat.Messages.MessageParser
 import com.ktHat.Messages.MessageType
 import com.ktHat.Messages.UserRegMessage
+import com.ktHat.Models.OnlineList
 import com.third.lhat.Objects.listAdapter
 import com.squareup.moshi.JsonDataException
-import com.third.lhat.dependency.kthat.base.models.Chat
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
@@ -31,15 +31,15 @@ import java.net.Socket
  * connection.close() - 关闭连接。
  */
 const val TAG = "Connection"
-class Connection(IP: String, port: Int, val onClose: () -> Unit, val connectTimeout = 3000, val soTimeout = 0) {
+class Connection(IP: String, port: Int, val onClose: () -> Unit, connectTimeout: Int = 3000, soTimeout: Int = 0) {
 
     constructor(
-        IP: String, 
-        port: Int, 
-        userName: String, 
-        onClose: () -> Unit, 
-        connectTimeout = 3000, 
-        soTimeout = 0
+        IP: String,
+        port: Int,
+        userName: String,
+        onClose: () -> Unit,
+        connectTimeout: Int = 3000,
+        soTimeout: Int = 0
     ) : this(IP, port, onClose, connectTimeout, soTimeout) {
         this.send(UserRegMessage(userName))
     }
@@ -52,8 +52,8 @@ class Connection(IP: String, port: Int, val onClose: () -> Unit, val connectTime
         socket.keepAlive = true
     }
 
-    private fun Socket.connect(IP: String, port: Int) {
-        this.connect(InetSocketAddress(IP, port))
+    private fun Socket.connect(IP: String, port: Int, timeout: Int = 0) {
+        this.connect(InetSocketAddress(IP, port), timeout)
     }
 
     fun close() {
@@ -95,7 +95,11 @@ class Connection(IP: String, port: Int, val onClose: () -> Unit, val connectTime
                         val message = MessageParser.parse(json.value)
                         when (message.type) {
                             MessageType.USER_MANIFEST -> {
-                                listAdapter.fromJson(message.rawMessage)?.let { OnlineList.setList(it) }
+                                listAdapter.fromJson(message.rawMessage)?.let {
+                                    OnlineList.setList(
+                                        it
+                                    )
+                                }
                                 continue
                             }
                             MessageType.DEFAULT_ROOM -> {

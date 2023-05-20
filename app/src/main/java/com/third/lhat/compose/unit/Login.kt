@@ -28,7 +28,9 @@ import com.ktHat.Utils.runOnMain
 import com.third.lhat.AppTheme
 import com.third.lhat.ClearRippleTheme
 import com.third.lhat.R
+import kotlinx.coroutines.CoroutineScope
 import java.net.URI
+import kotlin.coroutines.EmptyCoroutineContext
 
 @Composable
 fun LoginPage(
@@ -265,12 +267,14 @@ fun LoginPage(
                         {
                             loginPressed = true
                             //error here
-                            runOnIO {
+                            val scope = CoroutineScope(EmptyCoroutineContext)
+
+                            runOnIO(scope) {
                                 try {
                                     val connection = onLoginPressed(server, port, username)
                                     afterConnection(connection, server, port, username)
                                 } catch (e: Exception) {
-                                    runOnMain {
+                                    runOnMain(scope) {
                                         loginPressed = false
                                         onError(e)
                                     }

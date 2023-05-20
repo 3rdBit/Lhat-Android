@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ktHat.Utils.runOnMain
 import com.third.lhat.dependency.kthat.base.models.Connection
 import com.third.lhat.ActivityCollector
 import com.third.lhat.AppTheme
@@ -79,7 +80,14 @@ fun Main() = @Composable {
                     }
                 },
                 afterConnection = { connection, server, port, username ->
-                    addUserServerToDB(server, port, username)
+                    try {
+                        addUserServerToDB(server, port, username)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        runOnMain {
+                            makeToast(context, "数据库出现错误：${e.localizedMessage}")
+                        }
+                    }
                     viewModel.connection = connection
                     showMainActivity = true
                 },
@@ -119,12 +127,12 @@ private fun addUserServerToDB(
     time: LocalDateTime = LocalDateTime.now(),
 ) {
     val db = Database.db
-    val userId = db.userDao().insert(
+    val userId = db.userDao().queryOrInsert(
         User(
             userId = Constants.ID.NOT_SET, username = username
         )
     )
-    db.serverDao().insert(
+    db.serverDao().updateOrInsert(
         Server(
             serverId = Constants.ID.NOT_SET,
             address = server,

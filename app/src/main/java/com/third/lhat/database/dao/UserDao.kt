@@ -12,11 +12,21 @@ import com.third.lhat.database.model.UserWithServer
 
 @Dao
 interface UserDao {
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     fun insert(user: User): Long
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     fun insertAll(vararg user: User): List<Long>
+
+    @Query("SELECT * FROM user " +
+            "WHERE username = :username")
+    fun getUserByUsername(username: String): User?
+
+    fun queryOrInsert(user: User): Long {
+        val savedUser = getUserByUsername(user.username)
+        savedUser?.let { return it.userId }
+        return insert(user)
+    }
 
     @Delete
     fun delete(user: User)

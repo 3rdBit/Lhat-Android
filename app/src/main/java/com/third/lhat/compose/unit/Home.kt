@@ -3,6 +3,7 @@ package com.third.lhat.compose
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.VisibilityThreshold
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.animateIntOffsetAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.slideInVertically
@@ -16,6 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -28,6 +30,7 @@ import com.third.lhat.ViewModel
 import com.third.lhat.applyTonalElevation
 import com.third.lhat.compose.framework.Scaffold
 import com.third.lhat.dependency.kthat.base.models.Chat
+import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,7 +40,7 @@ fun Home() {
     AppTheme {
         val bottomBarHeight = 48.dp
         val bottomBarHeightPx = with(LocalDensity.current) { bottomBarHeight.roundToPx() }
-        val offset: IntOffset by animateIntOffsetAsState(
+        val fabOffset: IntOffset by animateIntOffsetAsState(
             IntOffset(
                 x = 0,
                 y = if (viewModel.bottomTabVisibility) {
@@ -51,6 +54,11 @@ fun Home() {
                 visibilityThreshold = IntOffset.VisibilityThreshold
             )
         )
+        val chatPageOffsetPercent by animateFloatAsState(
+            if (viewModel.currentChat != Chat.emptyChat) 0f else 1f
+        )
+
+
         Scaffold(
             bottomBar = {
                 AnimatedVisibility(
@@ -67,7 +75,7 @@ fun Home() {
             floatingActionButton = {
                 FAB(
                     modifier = Modifier
-                        .offset { offset }
+                        .offset { fabOffset }
                 )
                 { viewModel.bottomTabVisibility = true; viewModel.selectedBar = 0 }
             },
@@ -100,19 +108,14 @@ fun Home() {
         }
         Box(
             modifier = Modifier
-//                .layout { measurable, constraints ->
-//                    val placeable = measurable.measure(constraints)
-//                    val chatOffset = if (
-//                        viewModel.currentChat != Chat.emptyChat
-//                    ) {
-//                        0
-//                    } else {
-//                        placeable.width
-//                    }
-//                    layout(placeable.width, placeable.height) {
-//                        placeable.placeRelative(chatOffset, 0)
-//                    }
-//                }
+                .layout { measurable, constraints ->
+                    val placeable = measurable.measure(constraints)
+                    val chatOffset = (placeable.width * chatPageOffsetPercent).roundToInt()
+
+                    layout(placeable.width, placeable.height) {
+                        placeable.placeRelative(chatOffset, 0)
+                    }
+                }
                 .fillMaxSize()
         ) {
             if (viewModel.currentChat != Chat.emptyChat) {

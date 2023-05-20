@@ -1,4 +1,4 @@
-package com.ktHat.Messages
+package com.third.lhat.dependency.kthat.base.messages
 
 import com.squareup.moshi.Json
 
@@ -14,5 +14,6 @@ import com.squareup.moshi.Json
     USER_NAME, // send out
     DEFAULT_ROOM,
     FILE_RECV_DATA,
+    EMPTY
     //DO_NOT_PROCESS,
 }

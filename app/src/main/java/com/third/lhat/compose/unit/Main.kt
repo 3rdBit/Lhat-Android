@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.ktHat.Utils.runOnMain
+import com.third.lhat.dependency.kthat.base.utils.runOnMain
 import com.third.lhat.dependency.kthat.base.models.Connection
 import com.third.lhat.ActivityCollector
 import com.third.lhat.AppTheme
@@ -24,8 +24,8 @@ import com.third.lhat.Database
 import com.third.lhat.Objects
 import com.third.lhat.ViewModel
 import com.third.lhat.compose.Home
-import com.third.lhat.compose.LoginPage
-import com.third.lhat.compose.getHost
+import com.third.lhat.compose.unit.LoginPage
+import com.third.lhat.compose.unit.getHost
 import com.third.lhat.database.model.Server
 import com.third.lhat.database.model.User
 import com.third.lhat.dependency.kthat.base.models.Chat
@@ -35,18 +35,20 @@ import java.net.UnknownHostException
 import java.time.LocalDateTime
 
 @Suppress("FunctionName")
-fun Main() = @Composable {
+fun Main() = @Composable { ->
     var showMainActivity by remember { mutableStateOf(false) }
     AppTheme {
         val viewModel: ViewModel = viewModel()
         val context = LocalContext.current
+
         Objects.viewModel = viewModel
         Column(
             verticalArrangement = Arrangement.Center, modifier = Modifier.fillMaxSize()
         ) {
             LoginPage(
                 onLoginPressed = { server, port, username ->
-                    val connection = Connection(getHost(server),
+                    val connection = Connection(
+                        getHost(server),
                         port.toInt(),
                         username,
                         onClose = { ActivityCollector.removeAll() })
@@ -74,24 +76,24 @@ fun Main() = @Composable {
                         }
 
                         else -> {
-                            e.printStackTrace()
-                            makeToast(context, "${e.javaClass.canonicalName}：${e.localizedMessage}")
+                            throw e
+//                            e.printStackTrace()
+//                            makeToast(context, "${e.javaClass.canonicalName}：${e.localizedMessage}")
                         }
                     }
                 },
-                afterConnection = { connection, server, port, username ->
-                    try {
-                        addUserServerToDB(server, port, username)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                        runOnMain {
-                            makeToast(context, "数据库出现错误：${e.localizedMessage}")
-                        }
+            ) { connection, server, port, username ->
+                try {
+                    addUserServerToDB(server, port, username)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    runOnMain {
+                        makeToast(context, "数据库出现错误：${e.localizedMessage}")
                     }
-                    viewModel.connection = connection
-                    showMainActivity = true
-                },
-            )
+                }
+                viewModel.connection = connection
+                showMainActivity = true
+            }
             Spacer(
                 modifier = Modifier
                     .height(64.dp)

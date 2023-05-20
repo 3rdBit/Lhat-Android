@@ -1,11 +1,10 @@
 package com.third.lhat.dependency.kthat.base.models
 
 import android.util.Log
-import com.ktHat.Messages.Message
-import com.ktHat.Messages.MessageParser
-import com.ktHat.Messages.MessageType
-import com.ktHat.Messages.UserRegMessage
-import com.ktHat.Models.OnlineList
+import com.third.lhat.dependency.kthat.base.messages.Message
+import com.third.lhat.dependency.kthat.base.messages.MessageParser
+import com.third.lhat.dependency.kthat.base.messages.MessageType
+import com.third.lhat.dependency.kthat.base.messages.UserRegMessage
 import com.third.lhat.Objects.listAdapter
 import com.squareup.moshi.JsonDataException
 import kotlinx.coroutines.DelicateCoroutinesApi

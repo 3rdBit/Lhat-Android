@@ -1,4 +1,4 @@
-package com.ktHat.Utils
+package com.third.lhat.dependency.kthat.base.utils
 
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.JsonReader

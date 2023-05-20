@@ -1,7 +1,7 @@
-package com.ktHat.Messages
+package com.third.lhat.dependency.kthat.base.messages
 
-import com.ktHat.Models.UnknownMessage
-import com.ktHat.Utils.getTime
+import com.third.lhat.dependency.kthat.base.models.UnknownMessage
+import com.third.lhat.dependency.kthat.base.utils.getTime
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 

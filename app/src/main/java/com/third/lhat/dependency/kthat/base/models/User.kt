@@ -1,4 +1,4 @@
-package com.ktHat.Models
+package com.third.lhat.dependency.kthat.base.models
 
 /**
  * 因为兼容性暂时未启用User类。

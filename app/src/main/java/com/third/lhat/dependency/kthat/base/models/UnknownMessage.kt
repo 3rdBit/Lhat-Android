@@ -1,7 +1,7 @@
-package com.ktHat.Models
+package com.third.lhat.dependency.kthat.base.models
 
-import com.ktHat.Messages.Message
-import com.ktHat.Messages.MessageType
+import com.third.lhat.dependency.kthat.base.messages.Message
+import com.third.lhat.dependency.kthat.base.messages.MessageType
 import com.third.lhat.Objects
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass

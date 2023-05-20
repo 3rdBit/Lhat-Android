@@ -1,8 +1,6 @@
 package com.third.lhat.dependency.kthat.base.messages
 
-import com.ktHat.Messages.Message
-import com.ktHat.Messages.TextMessage
-import com.ktHat.Models.UnknownMessage
+import com.third.lhat.dependency.kthat.base.models.UnknownMessage
 
 data class FileRecvMessage(override val json: String
 ) : Message() {

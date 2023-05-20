@@ -1,18 +1,22 @@
-package com.third.lhat.compose
+package com.third.lhat.compose.unit
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
@@ -21,13 +25,18 @@ import androidx.compose.ui.res.integerResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.PopupProperties
 import com.third.lhat.dependency.kthat.base.models.Connection
-import com.ktHat.Utils.runOnIO
-import com.ktHat.Utils.runOnMain
+import com.third.lhat.dependency.kthat.base.utils.runOnIO
+import com.third.lhat.dependency.kthat.base.utils.runOnMain
 import com.third.lhat.AppTheme
 import com.third.lhat.ClearRippleTheme
+import com.third.lhat.Database
 import com.third.lhat.R
+import com.third.lhat.compose.CircularIconButton
+import com.third.lhat.database.model.User
 import kotlinx.coroutines.CoroutineScope
 import java.net.URI
 import kotlin.coroutines.EmptyCoroutineContext
@@ -52,12 +61,29 @@ fun LoginPage(
 
     var displayError by remember { mutableStateOf(false) }
 
+    var allUser by remember { mutableStateOf(listOf<User>()) }
+
+    var displayUsernameMenu by remember { mutableStateOf(false) }
+
     val errors = remember {
-        mutableStateMapOf<Field, List<Error>>(
+        mutableStateMapOf(
             Field.USERNAME to listOf(Error.FIELD_IS_EMPTY),
             Field.PORT to listOf(Error.FIELD_IS_EMPTY),
             Field.SERVER to listOf(Error.FIELD_IS_EMPTY)
         )
+    }
+
+    LaunchedEffect(Unit) {
+        runOnIO(this) {
+            val queried = Database.db.serverDao().queryLastLoginServer()
+            allUser = Database.db.userDao().getAllUser()
+            queried?.let { lastLogin ->
+                server = lastLogin.values.first().address
+                port = lastLogin.values.first().port.toString()
+                username = lastLogin.keys.first().username
+                errors.keys.forEach { errors[it] = listOf() }
+            }
+        }
     }
 
     val hintEnd by animateIntAsState(
@@ -107,6 +133,7 @@ fun LoginPage(
             colorScheme.primary
         }
     )
+
     Column(
         modifier = Modifier.padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -148,6 +175,37 @@ fun LoginPage(
                     errors[Field.USERNAME] = errors[Field.USERNAME]!! - Error.FIELD_IS_EMPTY
                 }
                 username = it.replace("[^\\u4E00-\\u9FA5A-Za-z0-9_]+".toRegex(), "")
+            },
+            trailingIcon = {
+                OutlinedButton(
+                    onClick = { displayUsernameMenu = true },
+                    modifier = Modifier.clip(CircleShape),
+                    shape = CircleShape,
+                    border = BorderStroke(0.dp, Color.Transparent)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.MoreVert, contentDescription = "expand username"
+                    )
+                }
+                DropdownMenu(
+                    expanded = displayUsernameMenu,
+                    properties = PopupProperties(
+                        focusable = true,
+                        dismissOnBackPress = false,
+                        dismissOnClickOutside = true
+                    ),
+                    onDismissRequest = {
+                        displayUsernameMenu = false
+                    },
+                    offset = DpOffset(5.dp, 5.dp)
+                ) {
+                    allUser.take(5).forEach { user ->
+                        DropdownMenuItem(
+                            text = { Text(user.username) },
+                            onClick = { username = user.username; displayUsernameMenu = false }
+                        )
+                    }
+                }
             })
         Spacer(Modifier.size(16.dp))
         Row {
@@ -227,9 +285,9 @@ fun LoginPage(
                 singleLine = true,
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Decimal),
                 onValueChange = { text ->
-                    val _port = text.filter { it.isDigit() }.take(5)
-                    port = _port
-                    if (text != _port) {
+                    val newPort = text.filter { it.isDigit() }.take(5)
+                    port = newPort
+                    if (text != newPort) {
                         return@OutlinedTextField
                     }
                     if (errors[Field.PORT]!!.contains(Error.FIELD_IS_EMPTY)) {
@@ -305,14 +363,12 @@ fun getHost(string: String): String {
 @Composable
 fun LoginPagePreview() {
     AppTheme {
-        Column(
-            verticalArrangement = Arrangement.Center, modifier = Modifier.fillMaxSize()
-        ) {
-            Spacer(
-                modifier = Modifier
-                    .height(64.dp)
-                    .fillMaxWidth()
-            )
+        LoginPage(onLoginPressed = { _, _, _ ->
+            return@LoginPage null!!
+        }, onError = {
+
+        }) { _, _, _, _ ->
+
         }
     }
 

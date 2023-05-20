@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.ktHat.Messages.TextMessage
+import com.third.lhat.dependency.kthat.base.messages.TextMessage
 import com.third.lhat.ViewModel
 import com.third.lhat.dependency.kthat.base.models.Chat
 import com.third.lhat.normalize

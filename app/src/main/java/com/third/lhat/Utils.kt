@@ -20,8 +20,8 @@ import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.google.android.material.snackbar.BaseTransientBottomBar.Duration
-import com.ktHat.Messages.Message
-import com.ktHat.Messages.TextMessage
+import com.third.lhat.dependency.kthat.base.messages.Message
+import com.third.lhat.dependency.kthat.base.messages.TextMessage
 import java.io.Serializable
 import java.text.Collator
 import java.util.*

@@ -1,4 +1,4 @@
-package com.ktHat.Models
+package com.third.lhat.dependency.kthat.base.models
 
 
 /**

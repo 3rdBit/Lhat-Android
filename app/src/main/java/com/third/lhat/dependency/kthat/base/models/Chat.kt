@@ -3,8 +3,9 @@ package com.third.lhat.dependency.kthat.base.models
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import com.ktHat.Messages.Message
-import com.ktHat.Messages.TextMessage
+import com.third.lhat.dependency.kthat.base.messages.Message
+import com.third.lhat.dependency.kthat.base.messages.MessageType
+import com.third.lhat.dependency.kthat.base.messages.TextMessage
 import com.third.lhat.Objects.viewModel
 import com.third.lhat.flush
 import com.third.lhat.dependency.kthat.base.models.MessageRead.getRead
@@ -12,27 +13,25 @@ import com.third.lhat.dependency.kthat.base.models.MessageRead.setRead
 import com.third.lhat.dependency.kthat.base.messages.EmptyMessage
 
 var Message.isRead: Boolean
-    get() = this.getRead()
-    set(boolean) = setRead(boolean)
+    inline get() = this.getRead()
+    inline set(boolean) = setRead(boolean)
 
 
 object MessageRead {
-    private val readList = mutableListOf<Message>()
-
     fun Message.setRead(boolean: Boolean = true) {
         if (boolean) {
-            if (this !in readList) {
-                readList.add(this)
+            if (this !in viewModel.readList) {
+                viewModel.readList.add(this)
             }
         } else {
-            if (this in readList) {
-                readList.remove(this)
+            if (this in viewModel.readList) {
+                viewModel.readList.remove(this)
             }
         }
     }
 
     fun Message.getRead(): Boolean {
-        return this in readList
+        return this in viewModel.readList
     }
 }
 
@@ -48,7 +47,7 @@ data class Chat private constructor(
 
     private val me = viewModel.username
 
-    private val others = lastMessage.run {
+    val others = lastMessage.run {
         if (sender == viewModel.username) receiver else sender
     }
 
@@ -112,7 +111,8 @@ data class Chat private constructor(
                 TextMessage(
                     sender = name,
                     receiver = viewModel.username,
-                    rawMessage = ""
+                    rawMessage = "",
+                    type = MessageType.EMPTY
                 ).also { it.setRead() }, isGroup = true
             )
             viewModel.groupName = name

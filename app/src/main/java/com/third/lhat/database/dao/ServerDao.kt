@@ -4,8 +4,10 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import com.third.lhat.database.model.Server
+import com.third.lhat.database.model.User
 
 @Dao
 interface ServerDao {
@@ -45,4 +47,11 @@ interface ServerDao {
         }
         return insert(server)
     }
+
+    @Transaction
+    @Query("SELECT * FROM server " +
+            "JOIN user ON serverUserId = userId " +
+            "ORDER BY lastLogin DESC " +
+            "LIMIT 1")
+    fun queryLastLoginServer(): Map<User, Server>?
 }

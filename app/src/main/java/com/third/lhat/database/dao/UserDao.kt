@@ -19,7 +19,8 @@ interface UserDao {
     fun insertAll(vararg user: User): List<Long>
 
     @Query("SELECT * FROM user " +
-            "WHERE username = :username")
+            "WHERE username = :username " +
+            "LIMIT 1")
     fun getUserByUsername(username: String): User?
 
     fun queryOrInsert(user: User): Long {
@@ -50,4 +51,7 @@ interface UserDao {
     @Query("SELECT * FROM User " +
             "WHERE username = :username")
     fun getUserAndServersByUsername(username: String): List<UserWithServer>
+
+    @Query("SELECT * FROM User")
+    fun getAllUser(): List<User>
 }

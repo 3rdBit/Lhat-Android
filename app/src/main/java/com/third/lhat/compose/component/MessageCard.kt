@@ -18,8 +18,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.ktHat.Messages.Message
-import com.ktHat.Messages.TextMessage
+import com.third.lhat.dependency.kthat.base.messages.Message
+import com.third.lhat.dependency.kthat.base.messages.TextMessage
 import com.third.lhat.AppTheme
 import com.third.lhat.ViewModel
 import com.third.lhat.compose.component.Favicon

@@ -3,7 +3,7 @@ package com.third.lhat
 import android.content.Context
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.room.Room
-import com.ktHat.Utils.NullAdapter
+import com.third.lhat.dependency.kthat.base.utils.NullAdapter
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types

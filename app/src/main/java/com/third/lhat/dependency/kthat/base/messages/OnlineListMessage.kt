@@ -1,6 +1,6 @@
-package com.ktHat.Messages
+package com.third.lhat.dependency.kthat.base.messages
 
-import com.ktHat.Models.UnknownMessage
+import com.third.lhat.dependency.kthat.base.models.UnknownMessage
 import com.third.lhat.Objects
 import com.squareup.moshi.adapter
 

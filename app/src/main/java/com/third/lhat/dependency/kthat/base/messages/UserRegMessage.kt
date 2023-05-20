@@ -1,6 +1,7 @@
-package com.ktHat.Messages
+package com.third.lhat.dependency.kthat.base.messages
 
-import com.ktHat.Utils.getTime
+import androidx.annotation.Keep
+import com.third.lhat.dependency.kthat.base.utils.getTime
 import com.third.lhat.Objects
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -11,6 +12,7 @@ import com.squareup.moshi.adapter
  * 此消息不应由您手动处理。
  */
 
+@Keep
 @JsonClass(generateAdapter = true)
 class UserRegMessage private constructor(
     @Json(name = "by") override var sender: String = "",

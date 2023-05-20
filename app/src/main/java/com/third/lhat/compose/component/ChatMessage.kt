@@ -22,12 +22,13 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.third.lhat.AppTheme
 import com.third.lhat.ViewModel
+import com.third.lhat.dependency.kthat.base.messages.Message
 import kotlinx.coroutines.launch
 
 @Composable
 fun ChatMessage(
     modifier: Modifier = Modifier,
-    message: com.ktHat.Messages.Message,
+    message: Message,
     contentColorOthers: Color = Color.Black,
     containerColorOthers: CardColors = cardColors(Color.White, contentColorOthers),
     contentColorMe: Color = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -203,12 +204,13 @@ fun LongChatMessageColumnPreview() {
                     Text(text = "Add")
                 }
             }
-        ) {
+        ) { paddingValues ->
             LazyColumn(
                 verticalArrangement = Arrangement.Bottom,
                 state = lazyListState,
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(paddingValues)
                     .background(Color.LightGray.copy(alpha = 0.3f))
             ) {
                 messages.forEach { (message, who) ->
@@ -259,12 +261,13 @@ fun ShortChatMessageColumnPreview() {
                     Text(text = "Add")
                 }
             }
-        ) {
+        ) { paddingValues ->
             LazyColumn(
                 verticalArrangement = Arrangement.Bottom,
                 state = lazyListState,
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(paddingValues)
                     .background(Color.LightGray.copy(alpha = 0.3f))
             ) {
                 messages.forEach { (message, who) ->

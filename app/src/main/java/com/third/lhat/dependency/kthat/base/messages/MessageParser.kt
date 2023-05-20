@@ -1,12 +1,9 @@
-package com.ktHat.Messages
+package com.third.lhat.dependency.kthat.base.messages
 
 import android.util.Log
-import com.ktHat.Models.UnknownMessage
+import com.third.lhat.dependency.kthat.base.models.UnknownMessage
 import com.third.lhat.Objects.moshi
 import com.squareup.moshi.adapter
-import com.third.lhat.dependency.kthat.base.messages.DefaultRoomMessage
-import com.third.lhat.dependency.kthat.base.messages.EmptyMessage
-import com.third.lhat.dependency.kthat.base.messages.FileRecvMessage
 
 /**
  * 用法：
@@ -29,6 +26,7 @@ object MessageParser {
             MessageType.DEFAULT_ROOM -> DefaultRoomMessage.parse(obj)
             MessageType.FILE_RECV_DATA -> FileRecvMessage.parse(obj)
             MessageType.USER_NAME -> throw UnknownError(obj.toString())
+            MessageType.EMPTY -> EmptyMessage()
         }
 
         return message

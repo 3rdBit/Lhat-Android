@@ -31,17 +31,24 @@ import java.net.Socket
  * connection.close() - 关闭连接。
  */
 const val TAG = "Connection"
-class Connection(IP: String, port: Int, val onClose: () -> Unit) {
+class Connection(IP: String, port: Int, val onClose: () -> Unit, val connectTimeout = 3000, val soTimeout = 0) {
 
-    constructor(IP: String, port: Int, userName: String, onClose: () -> Unit) : this(IP, port, onClose) {
+    constructor(
+        IP: String, 
+        port: Int, 
+        userName: String, 
+        onClose: () -> Unit, 
+        connectTimeout = 3000, 
+        soTimeout = 0
+    ) : this(IP, port, onClose, connectTimeout, soTimeout) {
         this.send(UserRegMessage(userName))
     }
 
     private val socket: Socket = Socket()
 
     init {
-        socket.connect(IP, port)
-
+        socket.soTimeout = soTimeout
+        socket.connect(IP, port, connectTimeout)
         socket.keepAlive = true
     }
 

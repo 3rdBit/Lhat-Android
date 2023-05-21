@@ -1,4 +1,6 @@
 # Lhat-Android!
+[Compatible Server] (https://github.com/shacha086/Lhat-Server-compatible)
+[Compatible PC Version] (https://github.com/shacha086/Lhat-Server-compatible)
 ![Temporary Preview](https://user-images.githubusercontent.com/50512232/167887169-90c8dcc2-7864-4a01-b902-e33ccc273b93.jpg)
 
 ***TODO:***

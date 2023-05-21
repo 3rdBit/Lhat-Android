@@ -48,9 +48,7 @@ data class Chat private constructor(
 
     private val me = viewModel.username
 
-    val others = lastMessage.run {
-        if (sender == viewModel.username) receiver else sender
-    }
+    val others = lastMessage.target
 
     val lastMessage: Message
         get() = messageList.last()

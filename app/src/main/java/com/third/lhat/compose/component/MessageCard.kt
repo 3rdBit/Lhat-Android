@@ -77,8 +77,9 @@ fun MessageCard(
             modifier = Modifier
                 .padding(15.dp)
         ) {
+            val targetUsername = message.target
             Favicon(
-                name = message.sender,
+                name = targetUsername,
             )
             Spacer(modifier = Modifier.width(8.dp))
             Column(
@@ -86,7 +87,7 @@ fun MessageCard(
                     .fillMaxWidth()
             ) {
                 Text( //Author
-                    text = message.sender,
+                    text = targetUsername,
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.titleLarge
                 )

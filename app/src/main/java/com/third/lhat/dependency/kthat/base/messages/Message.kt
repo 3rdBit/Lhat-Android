@@ -4,6 +4,7 @@ import com.third.lhat.dependency.kthat.base.models.UnknownMessage
 import com.third.lhat.dependency.kthat.base.utils.getTime
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import com.third.lhat.Objects.viewModel
 
 /**
  * Message应当是所有消息的父类。
@@ -28,7 +29,8 @@ abstract class Message(
     //override val end: String = END
 ) {
     @Json(ignore = true) var isInGroup = false
-    var member: String? = null
+    @Json(ignore = true) var member: String? = null
+    val target get() = if (sender == viewModel.username) receiver else sender
     abstract val json: String
     abstract class Parse {
         abstract fun parse(message: UnknownMessage): Message

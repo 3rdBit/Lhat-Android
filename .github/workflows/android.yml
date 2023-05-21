@@ -25,8 +25,7 @@ jobs:
          # override default build-tools version (29.0.3) -- optional
          BUILD_TOOLS_VERSION: "30.0.2"
          
-     - uses: ShaunLWM/action-release-debugapk@master
-       env:
-         GITHUB_TOKEN: $\{{ secrets.GITHUB_TOKEN }}
-         APP_FOLDER: ${{steps.sign_app.outputs.signedReleaseFile}}
-         RELEASE_TITLE: New Build
+     - uses: actions/upload-artifact@v2
+       with:
+         name: Signed app bundle
+         path: ${{steps.sign_app.outputs.signedReleaseFile}}

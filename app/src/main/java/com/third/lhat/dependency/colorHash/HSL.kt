@@ -1,3 +1,4 @@
+@file:Suppress("unused")
 package com.third.lhat.dependency.colorHash
 
 import android.graphics.Color

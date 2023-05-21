@@ -1,3 +1,5 @@
+package com.third.lhat.compose.unit
+
 import android.system.ErrnoException
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,9 +25,6 @@ import com.third.lhat.Constants
 import com.third.lhat.Database
 import com.third.lhat.Objects
 import com.third.lhat.ViewModel
-import com.third.lhat.compose.unit.Home
-import com.third.lhat.compose.unit.LoginPage
-import com.third.lhat.compose.unit.getHost
 import com.third.lhat.database.model.Server
 import com.third.lhat.database.model.User
 import com.third.lhat.dependency.kthat.base.models.Chat

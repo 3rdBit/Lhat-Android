@@ -1,4 +1,4 @@
-package com.third.lhat.compose
+package com.third.lhat.compose.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

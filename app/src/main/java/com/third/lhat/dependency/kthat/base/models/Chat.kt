@@ -36,6 +36,7 @@ object MessageRead {
 }
 
 
+@Suppress("DataClassPrivateConstructor")
 data class Chat private constructor(
     val messageList: SnapshotStateList<Message>,
     private val isGroup: Boolean = false
@@ -135,8 +136,5 @@ data class Chat private constructor(
             return chat
         }
 
-        fun getChatOrNull(username: String): Chat? {
-            return chatMap[username]
-        }
     }
 }

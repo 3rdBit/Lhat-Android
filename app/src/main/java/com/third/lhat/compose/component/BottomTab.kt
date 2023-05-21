@@ -1,4 +1,4 @@
-package com.third.lhat.compose
+package com.third.lhat.compose.component
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -14,7 +14,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.third.lhat.ClearRippleTheme
-import com.third.lhat.Objects
 import com.third.lhat.ViewModel
 import com.third.lhat.makeToast
 import com.third.lhat.noRippleClickable

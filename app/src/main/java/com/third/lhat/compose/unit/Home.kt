@@ -43,10 +43,9 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.third.lhat.Objects
 import com.third.lhat.ViewModel
 import com.third.lhat.applyTonalElevation
-import com.third.lhat.compose.BottomTab
-import com.third.lhat.compose.ChatPage
-import com.third.lhat.compose.FAB
-import com.third.lhat.compose.MessageList
+import com.third.lhat.compose.component.BottomTab
+import com.third.lhat.compose.component.FAB
+import com.third.lhat.compose.component.MessageList
 import com.third.lhat.compose.component.Favicon
 import com.third.lhat.compose.component.TopTab
 import com.third.lhat.compose.framework.Scaffold

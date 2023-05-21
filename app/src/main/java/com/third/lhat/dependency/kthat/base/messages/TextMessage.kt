@@ -52,5 +52,4 @@ data class TextMessage constructor(
             return adapter.toJson(this)
         }
 
-    private fun copy() {}
 }

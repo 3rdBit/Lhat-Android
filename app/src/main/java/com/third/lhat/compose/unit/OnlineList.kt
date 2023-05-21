@@ -17,14 +17,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogWindowProvider
 import androidx.compose.ui.window.Popup
-import com.third.lhat.compose.AlphabeticBar
-import com.third.lhat.compose.OnlineLine
+import com.third.lhat.compose.component.AlphabeticBar
+import com.third.lhat.compose.component.OnlineLine
 import com.third.lhat.isOnlyPage
 import projekt.cloud.piece.c2.pinyin.C2Pinyin.pinyin
 
@@ -100,9 +99,19 @@ fun OnlineLinePrev() {
 
 @Preview
 @Composable
-fun OnlineListPreview() {
-    val list = mutableListOf("test1", "test2", "test3", "啊啊啊我ptt又掉了", "救救我", "aaawa")
-//    list.run { addAll(lastIndex, LoremIpsum().values.first().split(" ").toSet()) }
+fun SingleOnlineListPreview() {
+    val list = mutableListOf("test1", "test2", "test3", "test4", "test5", "test6")
+    val items = remember { list.sortedBy { it.first().pinyin.first().uppercase() } }
+    val headers = remember { items.map { it.first().pinyin.first().uppercase() }.toSet().toList() }
+    val listState = rememberLazyListState()
+    List(Modifier, listState, items, {  }, headers)
+}
+
+@Preview
+@Composable
+fun MultiOnlineListPreview() {
+    val list = mutableListOf("test1", "test2", "test3", "test4", "test5", "test6")
+    list.run { addAll(lastIndex, LoremIpsum().values.first().split(" ").toSet()) }
     val items = remember { list.sortedBy { it.first().pinyin.first().uppercase() } }
     val headers = remember { items.map { it.first().pinyin.first().uppercase() }.toSet().toList() }
     val listState = rememberLazyListState()

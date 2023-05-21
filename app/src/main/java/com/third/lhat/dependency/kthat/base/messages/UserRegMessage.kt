@@ -1,6 +1,5 @@
 package com.third.lhat.dependency.kthat.base.messages
 
-import androidx.annotation.Keep
 import com.third.lhat.dependency.kthat.base.utils.getTime
 import com.third.lhat.Objects
 import com.squareup.moshi.Json

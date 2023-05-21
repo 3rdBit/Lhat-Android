@@ -1,3 +1,4 @@
+@file:Suppress("unused")
 package com.third.lhat.dependency.kthat.base.utils
 
 import kotlinx.coroutines.CoroutineScope

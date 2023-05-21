@@ -20,6 +20,4 @@ data class DefaultRoomMessage(
         }
     }
 
-    val roomTitle = rawMessage
-
 }

@@ -1,10 +1,7 @@
-package com.third.lhat.compose
+package com.third.lhat.compose.unit
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkOut
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,7 +11,6 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.consumedWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -23,7 +19,6 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.magnifier
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -46,7 +41,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.google.accompanist.insets.imePadding
 import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.third.lhat.dependency.kthat.base.messages.Message
 import com.third.lhat.dependency.kthat.base.messages.MessageType
@@ -55,6 +49,7 @@ import com.third.lhat.dependency.kthat.base.utils.runOnIO
 import com.third.lhat.theme.ui.AppTheme
 import com.third.lhat.ViewModel
 import com.third.lhat.compose.component.ChatMessage
+import com.third.lhat.compose.component.ChattingBar
 import com.third.lhat.compose.component.TopTab
 import com.third.lhat.dependency.kthat.base.messages.EmptyMessage
 import com.third.lhat.dependency.kthat.base.models.Chat

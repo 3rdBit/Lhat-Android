@@ -1,4 +1,4 @@
-package com.third.lhat.compose
+package com.third.lhat.compose.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
@@ -36,9 +36,9 @@ fun ChattingBar(
         CircularIconButton(
             onClick = {
                 if (message.isNotBlank()) {
-                    val _message = message
+                    val origMessage = message
                     message = ""
-                    onClickAndClear(_message)
+                    onClickAndClear(origMessage)
                 }
             },
             containerColor = Color.Transparent,
@@ -56,8 +56,6 @@ fun ChattingBar(
     }
 }
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TextingField(
     value: String,

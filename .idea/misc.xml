@@ -16,8 +16,9 @@
     </option>
   </component>
   <component name="EntryPointsManager">
-    <list size="1">
-      <item index="0" class="java.lang.String" itemvalue="com.squareup.moshi.FromJson" />
+    <list size="2">
+      <item index="0" class="java.lang.String" itemvalue="androidx.compose.runtime.Composable" />
+      <item index="1" class="java.lang.String" itemvalue="com.squareup.moshi.FromJson" />
     </list>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="temurin-17" project-jdk-type="JavaSDK">

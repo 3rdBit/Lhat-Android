@@ -1,10 +1,10 @@
 package com.third.lhat
 
-import Main
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.lifecycle.ViewModelProvider
+import com.third.lhat.compose.unit.Main
 
 class ComposeActivity : ComponentActivity() {
     companion object : Startable

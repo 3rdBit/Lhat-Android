@@ -152,7 +152,7 @@ fun ChatMessageFromOthersPreview() {
     ChatMessage(username = "shack", text = "test", me = false, isInGroup = false)
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Preview
 @Composable
 fun LongChatMessageColumnPreview() {
@@ -233,7 +233,7 @@ fun LongChatMessageColumnPreview() {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Preview
 @Composable
 fun ShortChatMessageColumnPreview() {

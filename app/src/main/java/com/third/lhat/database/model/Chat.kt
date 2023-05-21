@@ -1,3 +1,4 @@
+@file:Suppress("unused")
 package com.third.lhat.database.model
 
 import androidx.room.Entity

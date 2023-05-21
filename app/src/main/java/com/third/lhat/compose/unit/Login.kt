@@ -37,7 +37,7 @@ import com.third.lhat.theme.ui.AppTheme
 import com.third.lhat.ClearRippleTheme
 import com.third.lhat.Database
 import com.third.lhat.R
-import com.third.lhat.compose.CircularIconButton
+import com.third.lhat.compose.component.CircularIconButton
 import com.third.lhat.database.model.User
 import kotlinx.coroutines.CoroutineScope
 import java.net.URI
@@ -54,11 +54,11 @@ fun LoginPage(
 ) {
     val colorScheme = MaterialTheme.colorScheme
 
-    var server by remember { mutableStateOf(server) }
+    var statedServer by remember { mutableStateOf(server) }
 
-    var port by remember { mutableStateOf(port) }
+    var statedPort by remember { mutableStateOf(port) }
 
-    var username by remember { mutableStateOf(username) }
+    var statedUsername by remember { mutableStateOf(username) }
 
     val isFocused = remember { mutableStateListOf(false, false, false) }
 
@@ -83,9 +83,9 @@ fun LoginPage(
             val queried = Database.db.serverDao().queryLastLoginServer()
             allUser = Database.db.userDao().getAllUser()
             queried?.let { lastLogin ->
-                server = lastLogin.values.first().address
-                port = lastLogin.values.first().port.toString()
-                username = lastLogin.keys.first().username
+                statedServer = lastLogin.values.first().address
+                statedPort = lastLogin.values.first().port.toString()
+                statedUsername = lastLogin.keys.first().username
                 errors.keys.forEach { errors[it] = listOf() }
             }
         }
@@ -161,7 +161,7 @@ fun LoginPage(
                     )
                 }
             },
-            value = username,
+            value = statedUsername,
             shape = RoundedCornerShape(16.dp),
             singleLine = true,
             modifier = Modifier
@@ -179,7 +179,7 @@ fun LoginPage(
                 if (errors[Field.USERNAME]!!.contains(Error.FIELD_IS_EMPTY)) {
                     errors[Field.USERNAME] = errors[Field.USERNAME]!! - Error.FIELD_IS_EMPTY
                 }
-                username = it.replace("[^\\u4E00-\\u9FA5A-Za-z0-9_]+".toRegex(), "")
+                statedUsername = it.replace("[^\\u4E00-\\u9FA5A-Za-z0-9_]+".toRegex(), "")
             },
             trailingIcon = {
                 OutlinedButton(
@@ -208,12 +208,12 @@ fun LoginPage(
                     allUser.take(5).forEach { user ->
                         DropdownMenuItem(
                             text = { Text(user.username) },
-                            onClick = { username = user.username; displayUsernameMenu = false }
+                            onClick = { statedUsername = user.username; displayUsernameMenu = false }
                         )
                     }
                     DropdownMenuItem(
                         text = { Text("清空输入框…") },
-                        onClick = { username = ""; displayUsernameMenu = false }
+                        onClick = { statedUsername = ""; displayUsernameMenu = false }
                     )
                 }
             })
@@ -244,7 +244,7 @@ fun LoginPage(
                     .onFocusEvent {
                         isFocused[1] = it.isFocused
                     },
-                value = server,
+                value = statedServer,
                 shape = RoundedCornerShape(16.dp),
                 singleLine = true,
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Ascii),
@@ -254,10 +254,10 @@ fun LoginPage(
                     }
                     if (str.contains("(?<!https?)[:：]".toRegex())) {
                         val split = str.split("(?<!https?)[:：]".toRegex()).toMutableList()
-                        server = split[0]
+                        statedServer = split[0]
                         split.removeIf { it.isBlank() }
                         if (split.size > 1) {
-                            port = split[1]
+                            statedPort = split[1]
                             if (errors[Field.PORT]!!.contains(Error.FIELD_IS_EMPTY)) {
                                 errors[Field.PORT] = errors[Field.PORT]!! - Error.FIELD_IS_EMPTY
                             }
@@ -265,13 +265,13 @@ fun LoginPage(
                             focusManager.moveFocus(FocusDirection.Right)
                         }
                     } else {
-                        server = str
+                        statedServer = str
                     }
                 },
                 trailingIcon = {
-                    if (server.isNotEmpty()) {
+                    if (statedServer.isNotEmpty()) {
                         CircularIconButton(
-                            onClick = { server = "" },
+                            onClick = { statedServer = "" },
                             modifier = Modifier
                                 .size(24.dp)
                                 .clip(CircleShape),
@@ -309,13 +309,13 @@ fun LoginPage(
                         )
                     }
                 },
-                value = port,
+                value = statedPort,
                 shape = RoundedCornerShape(14.dp),
                 singleLine = true,
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Decimal),
                 onValueChange = { text ->
                     val newPort = text.filter { it.isDigit() }.take(5)
-                    port = newPort
+                    statedPort = newPort
                     if (text != newPort) {
                         return@OutlinedTextField
                     }
@@ -330,7 +330,7 @@ fun LoginPage(
             LocalRippleTheme provides ClearRippleTheme
         ) {
             val isIllegal = {
-                server.isBlank() || port.isBlank() || username.isBlank() || errors[Field.USERNAME]!!.contains(
+                statedServer.isBlank() || statedPort.isBlank() || statedUsername.isBlank() || errors[Field.USERNAME]!!.contains(
                     Error.LENGTH_EXCEEDED
                 )
             }
@@ -339,13 +339,13 @@ fun LoginPage(
                 onClick = if (!loginPressed) {
                     if (isIllegal()) {
                         lambda@{
-                            if (server.isBlank()) {
+                            if (statedServer.isBlank()) {
                                 errors[Field.SERVER] = errors[Field.SERVER]!! + Error.FIELD_IS_EMPTY
                             }
-                            if (port.isBlank()) {
+                            if (statedPort.isBlank()) {
                                 errors[Field.PORT] = errors[Field.PORT]!! + Error.FIELD_IS_EMPTY
                             }
-                            if (username.isBlank()) {
+                            if (statedUsername.isBlank()) {
                                 errors[Field.USERNAME] =
                                     errors[Field.USERNAME]!! + Error.FIELD_IS_EMPTY
                             }
@@ -359,8 +359,8 @@ fun LoginPage(
 
                             runOnIO(scope) {
                                 try {
-                                    val connection = onLoginPressed(server, port, username)
-                                    afterConnection(connection, server, port, username)
+                                    val connection = onLoginPressed(statedServer, statedPort, statedUsername)
+                                    afterConnection(connection, statedServer, statedPort, statedUsername)
                                 } catch (e: Exception) {
                                     runOnMain(scope) {
                                         loginPressed = false
@@ -399,7 +399,7 @@ fun LoginPagePreview() {
 
         }, afterConnection = { _, _, _, _ ->
 
-        }, server = "www.aaaaabbbccc.com")
+        }, server = "www.example.org")
     }
 
 }

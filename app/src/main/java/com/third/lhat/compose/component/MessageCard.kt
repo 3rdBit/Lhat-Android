@@ -1,4 +1,4 @@
-package com.third.lhat.compose
+package com.third.lhat.compose.component
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -22,7 +22,6 @@ import com.third.lhat.dependency.kthat.base.messages.Message
 import com.third.lhat.dependency.kthat.base.messages.TextMessage
 import com.third.lhat.theme.ui.AppTheme
 import com.third.lhat.ViewModel
-import com.third.lhat.compose.component.Favicon
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -123,7 +122,7 @@ fun UnreadBox(
                 MaterialTheme.colorScheme.secondaryContainer,
                 shape = CircleShape
             )
-            .layout() { measurable, constraints ->
+            .layout { measurable, constraints ->
                 val placeable = measurable.measure(constraints)
                 val currentHeight = placeable.height
 
@@ -152,7 +151,7 @@ fun UnreadBoxPreview() {
 @Preview
 @Composable
 fun MessageCardPreview() {
-    AppTheme() {
+    AppTheme {
         MessageCard(
             TextMessage(
                 sender = "what",

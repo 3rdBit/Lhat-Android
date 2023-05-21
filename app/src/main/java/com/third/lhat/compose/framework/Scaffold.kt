@@ -43,11 +43,11 @@ import androidx.compose.ui.unit.dp
  *
  * Simple example of a Scaffold with [SmallTopAppBar], [FloatingActionButton]:
  *
- * @sample androidx.compose.material3.samples.SimpleScaffoldWithTopBar
+// * @sample androidx.compose.material3.samples.SimpleScaffoldWithTopBar
  *
  * To show a [Snackbar], use [SnackbarHostState.showSnackbar].
  *
- * @sample androidx.compose.material3.samples.ScaffoldWithSimpleSnackbar
+// * @sample androidx.compose.material3.samples.ScaffoldWithSimpleSnackbar
  *
  * @param modifier optional Modifier for the root of the [Scaffold].
  * @param topBar top app bar of the screen. Consider using [SmallTopAppBar].
@@ -223,7 +223,7 @@ private fun ScaffoldLayout(
  */
 // TODO(b/200553810): Mark as experimental
 @ExperimentalMaterial3Api
-@Suppress("INLINE_CLASS_DEPRECATED", "EXPERIMENTAL_FEATURE_WARNING")
+@Suppress("INLINE_CLASS_DEPRECATED")
 inline class FabPosition internal constructor(@Suppress("unused") private val value: Int) {
     companion object {
         /**

@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package com.third.lhat.database.converter
 
 import androidx.room.TypeConverter

@@ -10,21 +10,31 @@ jobs:
    steps:
      - name: Checkout
        uses: actions/checkout@v2.4.0
-     - name: Build Signed APK
-       # You may pin to the exact commit or the version.
-       # uses: victorbnl/build-signed-apk@131e59d4deaf2fb9d2aadb555b2ac131affeef5f
-       uses: victorbnl/build-signed-apk@v1.0.0
+       
+     - name: Build Android App
+       uses: sparkfabrik/android-build-action@v1.4.0
        with:
-         # Keystore file encoded as base64
-         keystore: ${{ secrets.keystore }}
-         # Keystore file password
-         keystore_password: ${{ secrets.keystore_password }}
-         # Key alias
-         key_alias: ${{ secrets.key_alias }}
-         # Key password
-         key_password: ${{ secrets.key_password }}
+         project-path: .
+         output-path: app/build/outputs/apk/release
+         gradle-task: assemble
          
-     - name: Push
-       uses: ad-m/github-push-action@v0.6.0
+     - uses: r0adkll/sign-android-release@v1
+       name: Sign app APK
+       # ID used to access action output
+       id: sign_app
        with:
-         github_token: $\{{ secrets.GITHUB_TOKEN }}
+         releaseDirectory: app/build/outputs/apk/release
+         signingKeyBase64: ${{ secrets.keystore }}
+         alias: ${{ secrets.key_alias }}
+         keyStorePassword: ${{ secrets.keystore_password }}
+         keyPassword: ${{ secrets.key_password }}
+       env:
+         # override default build-tools version (29.0.3) -- optional
+         BUILD_TOOLS_VERSION: "30.0.2"
+         
+     - name: Git Commit Push Action
+       # You may pin to the exact commit or the version.
+       # uses: GuillaumeFalourd/git-commit-push@205c043bca2f932f7a48a28a8d619ba30eb84baf
+       uses: GuillaumeFalourd/git-commit-push@v1.3
+       with:
+         access_token: $\{{ secrets.GITHUB_TOKEN }}

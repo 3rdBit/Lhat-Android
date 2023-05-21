@@ -27,6 +27,6 @@ jobs:
          
      - uses: ShaunLWM/action-release-debugapk@master
        env:
-         GITHUB_TOKEN: ${{ secrets.TOKEN }}
+         GITHUB_TOKEN: $\{{ secrets.GITHUB_TOKEN }}
          APP_FOLDER: ${{steps.sign_app.outputs.signedReleaseFile}}
          RELEASE_TITLE: New Build

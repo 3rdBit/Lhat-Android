@@ -1,6 +1,11 @@
 package com.third.lhat.compose
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkOut
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,6 +14,7 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.consumedWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -17,7 +23,13 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.magnifier
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -35,11 +47,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.insets.imePadding
+import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.third.lhat.dependency.kthat.base.messages.Message
 import com.third.lhat.dependency.kthat.base.messages.MessageType
 import com.third.lhat.dependency.kthat.base.messages.TextMessage
 import com.third.lhat.dependency.kthat.base.utils.runOnIO
-import com.third.lhat.AppTheme
+import com.third.lhat.theme.ui.AppTheme
 import com.third.lhat.ViewModel
 import com.third.lhat.compose.component.ChatMessage
 import com.third.lhat.compose.component.TopTab
@@ -54,7 +67,7 @@ fun ChatPage(chat: Chat) {
     ChatPage(messageList = chat.messageList)
 }
 
-@OptIn(ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ChatPage(messageList: SnapshotStateList<Message>) {
     val lazyListState = rememberLazyListState()
@@ -62,8 +75,15 @@ fun ChatPage(messageList: SnapshotStateList<Message>) {
     val viewModel: ViewModel = viewModel()
     AppTheme {
         Scaffold(topBar = {
-            TopTab(title = viewModel.currentChat.others,
-                onBackClick = { viewModel.currentChat = Chat.emptyChat })
+            TopTab(
+                title = viewModel.currentChat.others,
+            ) {
+                IconButton(
+                    onClick = { viewModel.currentChat = Chat.emptyChat }
+                ) {
+                    Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "back")
+                }
+            }
         },
             bottomBar = {
                 ChattingBar(onClickAndClear = { text ->
@@ -79,17 +99,21 @@ fun ChatPage(messageList: SnapshotStateList<Message>) {
             },
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.background)
-                .imePadding(),
+                .navigationBarsWithImePadding(),
             contentWindowInsets = WindowInsets(0, 0, 0, 0)
         ) { paddingValues ->
             AnimatedVisibility(
-                visible = messageList.size == 1 && messageList.first().type == MessageType.EMPTY
+                visible = messageList.size == 1 && messageList.first().type == MessageType.EMPTY,
+                exit = slideOutVertically() + fadeOut()
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Bottom,
                     modifier = Modifier
                         .fillMaxSize()
+                        .padding(paddingValues)
+                        .consumeWindowInsets(paddingValues)
+                        .systemBarsPadding(),
                 ) {
                     Box(
                         modifier = Modifier
@@ -112,9 +136,8 @@ fun ChatPage(messageList: SnapshotStateList<Message>) {
                 state = lazyListState,
                 modifier = Modifier
                     .padding(paddingValues)
-                    .fillMaxSize()
                     .consumeWindowInsets(paddingValues)
-                    .systemBarsPadding()
+                    .fillMaxSize()
                     .background(Color.LightGray.copy(alpha = 0.3f))
             ) {
                 items(messageList) {

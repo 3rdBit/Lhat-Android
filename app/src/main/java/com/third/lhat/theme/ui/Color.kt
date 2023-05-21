@@ -1,4 +1,4 @@
-package com.third.lhat
+package com.third.lhat.theme.ui
 import androidx.compose.ui.graphics.Color
 
 

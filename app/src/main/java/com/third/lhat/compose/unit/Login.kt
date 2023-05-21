@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.material3.*
@@ -24,6 +25,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.integerResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
@@ -31,7 +33,7 @@ import androidx.compose.ui.window.PopupProperties
 import com.third.lhat.dependency.kthat.base.models.Connection
 import com.third.lhat.dependency.kthat.base.utils.runOnIO
 import com.third.lhat.dependency.kthat.base.utils.runOnMain
-import com.third.lhat.AppTheme
+import com.third.lhat.theme.ui.AppTheme
 import com.third.lhat.ClearRippleTheme
 import com.third.lhat.Database
 import com.third.lhat.R
@@ -45,15 +47,18 @@ import kotlin.coroutines.EmptyCoroutineContext
 fun LoginPage(
     onLoginPressed: (server: String, port: String, username: String) -> Connection,
     onError: (e: Exception) -> Unit,
-    afterConnection: (connection: Connection, server: String, port: String, username: String) -> Unit,
+    server: String = "",
+    port: String = "",
+    username: String = "",
+    afterConnection: (connection: Connection, server: String, port: String, username: String) -> Unit
 ) {
     val colorScheme = MaterialTheme.colorScheme
 
-    var server by remember { mutableStateOf("") }
+    var server by remember { mutableStateOf(server) }
 
-    var port by remember { mutableStateOf("") }
+    var port by remember { mutableStateOf(port) }
 
-    var username by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf(username) }
 
     val isFocused = remember { mutableStateListOf(false, false, false) }
 
@@ -179,7 +184,8 @@ fun LoginPage(
             trailingIcon = {
                 OutlinedButton(
                     onClick = { displayUsernameMenu = true },
-                    modifier = Modifier.clip(CircleShape),
+                    modifier = Modifier
+                        .clip(CircleShape),
                     shape = CircleShape,
                     border = BorderStroke(0.dp, Color.Transparent)
                 ) {
@@ -205,11 +211,16 @@ fun LoginPage(
                             onClick = { username = user.username; displayUsernameMenu = false }
                         )
                     }
+                    DropdownMenuItem(
+                        text = { Text("清空输入框…") },
+                        onClick = { username = ""; displayUsernameMenu = false }
+                    )
                 }
             })
         Spacer(Modifier.size(16.dp))
         Row {
-            OutlinedTextField(isError = displayError && errors[Field.SERVER]!!.isNotEmpty(),
+            OutlinedTextField(
+                isError = displayError && errors[Field.SERVER]!!.isNotEmpty(),
                 label = {
                     if (displayError && errors[Field.SERVER]!!.contains(Error.FIELD_IS_EMPTY)) {
                         Text(
@@ -219,7 +230,8 @@ fun LoginPage(
                     } else {
                         Text(
                             stringResource(R.string.server_host_hint),
-                            Modifier.background(Color.Transparent)
+                            Modifier.background(Color.Transparent),
+                            overflow = TextOverflow.Visible
                         )
                     }
                 },
@@ -255,7 +267,24 @@ fun LoginPage(
                     } else {
                         server = str
                     }
-                })
+                },
+                trailingIcon = {
+                    if (server.isNotEmpty()) {
+                        CircularIconButton(
+                            onClick = { server = "" },
+                            modifier = Modifier
+                                .size(24.dp)
+                                .clip(CircleShape),
+                            containerColor = Color.Transparent
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Delete,
+                                contentDescription = "expand username"
+                            )
+                        }
+                    }
+                }
+            )
             Spacer(Modifier.size(8.dp))
             OutlinedTextField(isError = displayError && errors[Field.PORT]!!.isNotEmpty(),
                 colors = TextFieldDefaults.colors(
@@ -293,7 +322,8 @@ fun LoginPage(
                     if (errors[Field.PORT]!!.contains(Error.FIELD_IS_EMPTY)) {
                         errors[Field.PORT] = errors[Field.PORT]!! - Error.FIELD_IS_EMPTY
                     }
-                })
+                },
+            )
         }
         Spacer(Modifier.size(96.dp))
         CompositionLocalProvider(
@@ -367,9 +397,9 @@ fun LoginPagePreview() {
             return@LoginPage null!!
         }, onError = {
 
-        }) { _, _, _, _ ->
+        }, afterConnection = { _, _, _, _ ->
 
-        }
+        }, server = "www.aaaaabbbccc.com")
     }
 
 }

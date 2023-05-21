@@ -20,7 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.third.lhat.AppTheme
+import com.third.lhat.theme.ui.AppTheme
 import com.third.lhat.ViewModel
 import com.third.lhat.dependency.kthat.base.messages.Message
 import kotlinx.coroutines.launch

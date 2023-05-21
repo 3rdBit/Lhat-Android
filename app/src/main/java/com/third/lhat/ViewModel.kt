@@ -18,5 +18,6 @@ class ViewModel: ViewModel() {
     var connection: Connection? = null
     var currentChat: Chat by mutableStateOf(Chat.emptyChat)
     var groupName: String? = null
+    var onlineList by mutableStateOf(listOf<String>())
     val readList = mutableStateListOf<Message>()
 }

@@ -18,12 +18,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.third.lhat.dependency.kthat.base.utils.runOnMain
 import com.third.lhat.dependency.kthat.base.models.Connection
 import com.third.lhat.ActivityCollector
-import com.third.lhat.AppTheme
+import com.third.lhat.theme.ui.AppTheme
 import com.third.lhat.Constants
 import com.third.lhat.Database
 import com.third.lhat.Objects
 import com.third.lhat.ViewModel
-import com.third.lhat.compose.Home
+import com.third.lhat.compose.unit.Home
 import com.third.lhat.compose.unit.LoginPage
 import com.third.lhat.compose.unit.getHost
 import com.third.lhat.database.model.Server
@@ -76,9 +76,8 @@ fun Main() = @Composable { ->
                         }
 
                         else -> {
-                            throw e
-//                            e.printStackTrace()
-//                            makeToast(context, "${e.javaClass.canonicalName}：${e.localizedMessage}")
+                            e.printStackTrace()
+                            makeToast(context, "${e.javaClass.canonicalName}：${e.localizedMessage}")
                         }
                     }
                 },

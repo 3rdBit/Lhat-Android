@@ -10,7 +10,7 @@ import com.squareup.moshi.Json
 
 @Json(name = "type") enum class MessageType {
     TEXT_MESSAGE,
-    USER_MANIFEST,
+    USER_MANIFEST, // send in
     USER_NAME, // send out
     DEFAULT_ROOM,
     FILE_RECV_DATA,

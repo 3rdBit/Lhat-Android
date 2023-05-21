@@ -119,6 +119,22 @@ data class Chat private constructor(
             chatMap[name] = chat
         }
 
+        fun newChat(name: String): Chat {
+            if (name in chatMap.keys) {
+                return chatMap[name]!!
+            }
+            val chat = Chat(
+                TextMessage(
+                    sender = name,
+                    receiver = viewModel.username,
+                    rawMessage = "",
+                    type = MessageType.EMPTY
+                ).also { it.setRead() }, isGroup = true
+            )
+            chatMap[name] = chat
+            return chat
+        }
+
         fun getChatOrNull(username: String): Chat? {
             return chatMap[username]
         }

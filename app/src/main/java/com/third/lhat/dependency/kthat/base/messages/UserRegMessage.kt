@@ -12,7 +12,6 @@ import com.squareup.moshi.adapter
  * 此消息不应由您手动处理。
  */
 
-@Keep
 @JsonClass(generateAdapter = true)
 class UserRegMessage private constructor(
     @Json(name = "by") override var sender: String = "",

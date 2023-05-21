@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -60,41 +61,40 @@ fun AlphabeticBar(
             )
         }
     }
-
-    if (!listState.isOnlyPage()) {
-        Column(
-            verticalArrangement = Arrangement.SpaceEvenly,
-            modifier = Modifier
-                .width(32.dp)
-                .fillMaxHeight()
-                .background(Color.Transparent)
-                .alpha(0.8f)
-                .clip(RoundedCornerShape(8.dp))
-                .pointerInput(Unit) {
-                    detectTapGestures {
-                        updateSelectedIndexIfNeeded(it.y)
-                    }
+    Column(
+        verticalArrangement = Arrangement.SpaceEvenly,
+        modifier = Modifier
+            .width(32.dp)
+            .wrapContentHeight()
+            .background(Color.Transparent)
+            .alpha(0.8f)
+            .clip(RoundedCornerShape(8.dp))
+            .pointerInput(Unit) {
+                detectTapGestures {
+                    updateSelectedIndexIfNeeded(it.y)
                 }
-                .pointerInput(Unit) {
-                    detectVerticalDragGestures { change, _ ->
-                        updateSelectedIndexIfNeeded(change.position.y)
-                    }
-                }
-        ) {
-            headers.forEachIndexed { i, header ->
-                Text(
-                    header,
-                    color = if (items[listState.firstVisibleItemIndex].first().pinyin.first().uppercase() == header)
-                        selectedColor
-                    else
-                        baseColor,
-                    modifier = Modifier
-                        .align(CenterHorizontally)
-                        .onGloballyPositioned {
-                            offsets[i] = it.boundsInParent().center.y
-                        }
-                )
             }
+            .pointerInput(Unit) {
+                detectVerticalDragGestures { change, _ ->
+                    updateSelectedIndexIfNeeded(change.position.y)
+                }
+            }
+    ) {
+        headers.forEachIndexed { i, header ->
+            Text(
+                header,
+                color = if (items[listState.firstVisibleItemIndex].first().pinyin.first()
+                        .uppercase() == header
+                )
+                    selectedColor
+                else
+                    baseColor,
+                modifier = Modifier
+                    .align(CenterHorizontally)
+                    .onGloballyPositioned {
+                        offsets[i] = it.boundsInParent().center.y
+                    }
+            )
         }
     }
 }

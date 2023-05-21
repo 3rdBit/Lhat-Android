@@ -10,14 +10,7 @@ jobs:
    steps:
      - name: Checkout
        uses: actions/checkout@v2.4.0
-       
-     - name: Build Android App
-       uses: sparkfabrik/android-build-action@v1.4.0
-       with:
-         project-path: .
-         output-path: app/build/outputs/apk/release
-         gradle-task: assemble
-         
+      
      - uses: r0adkll/sign-android-release@v1
        name: Sign app APK
        # ID used to access action output

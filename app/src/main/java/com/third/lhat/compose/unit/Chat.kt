@@ -84,7 +84,7 @@ fun ChatPage(messageList: SnapshotStateList<Message>) {
                 ChattingBar(onClickAndClear = { text ->
                     val message = viewModel.currentChat.newTextMessage(text)
 //                    messageList += message
-                    runOnIO {
+                    runOnIO(coroutineScope) {
                         viewModel.connection?.send(message)
                     }
                     coroutineScope.launch {
